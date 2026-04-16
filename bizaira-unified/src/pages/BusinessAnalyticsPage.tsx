@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import SparkleIcon from "@/components/SparkleIcon";
 import { useI18n } from "@/lib/i18n";
 import { useSmartMemory } from "@/hooks/useSmartMemory";
+import { generateAnalytics } from "@/lib/ai-service";
 import { saveCreation, trackDownload } from "@/lib/creations-store";
 import {
   ArrowRight, ArrowLeft, TrendingUp, TrendingDown, DollarSign,
   Users, Target, MessageSquare, BarChart3, Lock, Sparkles, Loader2,
   PieChart, Download, FileText, Heart, HelpCircle, Trophy,
 } from "lucide-react";
-import { generateText } from "@/lib/ai-service";
 
 const MONTHS_HE = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
 const MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -69,13 +69,16 @@ const BusinessAnalyticsPage = () => {
     if (!question.trim()) return;
     setIsAsking(true);
     try {
-      const personalContext = feeling || tooMuchTime || wantToImprove
-        ? `\nהרגשה כללית: ${feeling || "לא צוין"}. האם העסק לוקח יותר מדי זמן: ${tooMuchTime || "לא צוין"}. מה רוצה לשפר: ${wantToImprove || "לא צוין"}.`
-        : "";
-      const systemPrompt = isHe
-        ? `אתה יועץ עסקי חכם. ענה בעברית בצורה קצרה, ברורה ומנומקת. התבסס על הנתונים: הכנסות חודשיות ${currency}${revenue.toLocaleString()}, הוצאות ${currency}${expenses.toLocaleString()}, רווח נקי ${currency}${profit.toLocaleString()}, ${clients} לקוחות חדשים.${personalContext}`
-        : `You are a smart business advisor. Answer briefly with reasoning. Data: monthly revenue ${currency}${revenue.toLocaleString()}, expenses ${currency}${expenses.toLocaleString()}, net profit ${currency}${profit.toLocaleString()}, ${clients} new clients.`;
-      const answer = await generateText(question, systemPrompt);
+      const answer = await generateAnalytics({
+        revenue,
+        expenses,
+        clients,
+        feeling,
+        tooMuchTime,
+        wantToImprove,
+        question,
+        language: isHe ? "hebrew" : "english",
+      });
       setAiAnswer(answer);
       if (answer && !answer.startsWith("לא הצלחתי")) {
         saveCreation({
@@ -87,7 +90,8 @@ const BusinessAnalyticsPage = () => {
           metadata: { revenue, expenses, clients },
         });
       }
-    } catch {
+    } catch (err: any) {
+      console.error("Analytics generation failed:", err?.message || err);
       setAiAnswer(isHe ? "לא הצלחתי לייצר תשובה. נסה שוב." : "Could not generate answer. Please try again.");
     } finally {
       setIsAsking(false);

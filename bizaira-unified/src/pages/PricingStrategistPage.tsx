@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import SparkleIcon from "@/components/SparkleIcon";
 import { useI18n } from "@/lib/i18n";
 import { useSmartMemory } from "@/hooks/useSmartMemory";
-import { generateText } from "@/lib/ai-service";
+import { generatePricing } from "@/lib/ai-service";
 import { saveCreation, trackDownload } from "@/lib/creations-store";
 import {
   ArrowRight, ArrowLeft, Sparkles, DollarSign, Clock, TrendingUp,
@@ -43,13 +43,13 @@ const PricingStrategistPage = () => {
   const handleSimulate = async () => {
     setIsSimulating(true);
     try {
-      const systemPrompt = isHe
-        ? "אתה יועץ תמחור עסקי. ענה בעברית בצורה קצרה וברורה."
-        : "You are a business pricing consultant. Answer briefly.";
-      const prompt = isHe
-        ? `נתונים: מחיר מומלץ ₪${recommendedPrice}, משך ${duration} דקות, חומרים ₪${material}, הוצאות ₪${fixed}/חודש. מה יקרה אם אעלה ב-10%? אם אוריד ב-15%? תן 3 המלצות.`
-        : `Data: price ₪${recommendedPrice}, ${duration}min, materials ₪${material}, fixed ₪${fixed}/mo. What if +10%? -15%? Give 3 recommendations.`;
-      const result = await generateText(prompt, systemPrompt);
+      const result = await generatePricing({
+        businessType: isHe ? "עסק קטן" : "small business",
+        currentPrice: `₪${recommendedPrice}`,
+        audience: isHe ? "לקוחות פוטנציאליים" : "potential clients",
+        goals: isHe ? "הגדלת רווחיות ושימור לקוחות" : "increase profitability and customer retention",
+        language: isHe ? "hebrew" : "english",
+      });
       setSimResult(result);
       if (result && !result.startsWith("העלאת")) {
         saveCreation({

@@ -135,7 +135,14 @@ const ProductPhotoStudioPage = () => {
       } else if (productType === "story") {
         prompt = `Professional Instagram/Facebook story image. Style: ${styleLabel}. Background: ${bgDesc}. Vertical format 9:16 aspect ratio, eye-catching, social media ready, modern design.`;
       } else {
-        prompt = `Professional product photography. Style: ${styleLabel}. Background: ${bgDesc}. Studio lighting, soft shadows, high-end commercial quality, perfect composition.`;
+        // Build professional prompt from form data
+        let productDetails = "";
+        if (textOverlay.productName) productDetails += textOverlay.productName;
+        if (textOverlay.description) productDetails += `, ${textOverlay.description}`;
+        if (textOverlay.price) productDetails += `, priced at ${textOverlay.price}`;
+        if (textOverlay.badge) productDetails += `, ${textOverlay.badge}`;
+
+        prompt = `Professional luxury product photography of ${productDetails || "luxury product"}, high-end lighting, navy and gold aesthetic, studio quality, elegant composition, premium branding.`;
       }
 
       // Add text overlay instructions with exact text preservation
@@ -172,16 +179,22 @@ const ProductPhotoStudioPage = () => {
 
   const goNext = () => {
     const idx = steps.indexOf(step);
-    if (idx < steps.length - 1) setStep(steps[idx + 1]);
+    if (idx < steps.length - 1) {
+      setStep(steps[idx + 1]);
+      setResultImage(null); // Clear result when navigating
+    }
   };
 
   const goPrev = () => {
     const idx = steps.indexOf(step);
-    if (idx > 0) setStep(steps[idx - 1]);
+    if (idx > 0) {
+      setStep(steps[idx - 1]);
+      setResultImage(null); // Clear result when navigating
+    }
   };
 
-  // Result view
-  if (resultImage) {
+  // Result view (only when not in customize step)
+  if (resultImage && step !== "customize") {
     return (
       <div className="min-h-screen pb-24">
         <div className="sticky top-0 z-40 glass-card border-b border-border/40 px-4 py-3">
@@ -439,8 +452,26 @@ const ProductPhotoStudioPage = () => {
 
             {/* Generate button */}
             <button onClick={handleEnhance} disabled={isProcessing} className="w-full gradient-glow glow-shadow text-primary-foreground font-bold py-4 rounded-xl text-base flex items-center justify-center gap-2 hover:scale-[1.02] transition-all disabled:opacity-50">
-              {isProcessing ? <><Loader2 size={20} className="animate-spin" />{isHe ? "יוצר תמונה..." : "Creating..."}</> : <><Sparkles size={20} />{isHe ? "צור תמונה" : "Create Image"}</>}
+              {isProcessing ? <><Loader2 size={20} className="animate-spin text-yellow-500" />{isHe ? "מייצר תמונה..." : "Creating image..."}</> : <><Sparkles size={20} />{isHe ? "צור תמונה" : "Create Image"}</>}
             </button>
+
+            {/* Display generated image below the button */}
+            {resultImage && (
+              <div className="glass-card rounded-xl p-4 animate-fade-in-up">
+                <div className="text-center mb-3">
+                  <h3 className="text-sm font-bold text-foreground">{isHe ? "התמונה שנוצרה" : "Generated Image"}</h3>
+                </div>
+                <img src={resultImage} alt="Generated" className="w-full rounded-lg" />
+                <div className="flex gap-2 mt-3">
+                  <button onClick={handleDownload} className="flex-1 gradient-glow glow-shadow text-primary-foreground font-bold py-2 rounded-lg text-sm flex items-center justify-center gap-2 hover:scale-[1.02] transition-all">
+                    <Download size={16} />{isHe ? "הורדה" : "Download"}
+                  </button>
+                  <button onClick={() => { setResultImage(null); handleEnhance(); }} className="flex-1 glass-card py-2 rounded-lg text-sm font-bold text-foreground flex items-center justify-center gap-2 hover:scale-[1.02] transition-all">
+                    <RefreshCw size={16} />{isHe ? "גרסה נוספת" : "Another Version"}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

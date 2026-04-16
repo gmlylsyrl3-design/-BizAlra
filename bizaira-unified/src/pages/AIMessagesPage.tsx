@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useI18n } from "@/lib/i18n";
-import { generateText } from "@/lib/ai-service";
+import { generateMessage } from "@/lib/ai-service";
 import SparkleIcon from "@/components/SparkleIcon";
 import { saveCreation, trackDownload } from "@/lib/creations-store";
 import {
@@ -57,16 +57,15 @@ const AIMessagesPage = () => {
         short: "concise and to-the-point", luxury: "luxury and premium",
       };
 
-      const systemPrompt = isHe
-        ? "אתה קופירייטר מקצועי שכותב הודעות שיווקיות עבור עסקים קטנים בישראל. כתוב הודעה בעברית בלבד. ההודעה צריכה להיות ברורה, מקצועית ומניעה לפעולה. אל תוסיף הסברים — רק את ההודעה עצמה."
-        : "You are a professional copywriter writing marketing messages for small businesses. Write only the message, no explanations.";
-
       let extra = modifier || "";
-      const prompt = isHe
-        ? `כתוב ${purposeLabels[purpose] || "הודעה"} בטון ${toneLabels[tone] || "מקצועי"}. קהל יעד: ${audience || "לקוחות"}.${details ? ` פרטים: ${details}` : ""}${extra ? ` ${extra}` : ""}`
-        : `Write a ${purposeLabels[purpose] || "message"} in a ${toneLabels[tone] || "professional"} tone. Audience: ${audience || "clients"}.${details ? ` Details: ${details}` : ""}${extra ? ` ${extra}` : ""}`;
-
-      const text = await generateText(prompt, systemPrompt);
+      const text = await generateMessage({
+        messageType: purposeLabels[purpose] || (isHe ? "הודעה" : "message"),
+        tone: toneLabels[tone] || (isHe ? "מקצועי" : "professional"),
+        audience,
+        details,
+        language: isHe ? "hebrew" : "english",
+        modifier: extra,
+      });
       setResult(text);
       // Auto-save to personal archive
       if (text && !text.startsWith("שגיאה") && !text.startsWith("Failed")) {
@@ -81,9 +80,12 @@ const AIMessagesPage = () => {
           metadata: { purpose, tone, audience },
         });
       }
-    } catch (err) {
-      console.error("Generation failed:", err);
-      setResult(isHe ? "שגיאה ביצירת ההודעה. נסה שוב." : "Failed to generate. Please try again.");
+    } catch (err: any) {
+      console.error("Generation failed:", err?.message || err);
+      setResult(isHe
+        ? `שגיאה ביצירת ההודעה: ${err?.message || "נסו שוב"}`
+        : `Failed to generate the message: ${err?.message || "Please try again."}`
+      );
     } finally {
       setIsGenerating(false);
     }

@@ -90,7 +90,7 @@
 
   /* ── Luxury Color Palette ── */
   --luxury-navy: 216 68% 12%;
-  --luxury-gold: 39 100% 56%;
+  --luxury-gold: 207 65% 12%;
   --luxury-lilac: 270 30% 65%;
   --luxury-black: 222 47% 8%;
   --luxury-white: 0 0% 100%;
@@ -108,7 +108,7 @@
   /* ── Gradient vars ── */
   --gradient-from: 216 68% 15%;
   --gradient-to:   216 68% 10%;
-  --gradient-gold: linear-gradient(135deg, hsl(39 100% 56%), hsl(39 90% 52%));
+  --gradient-gold: linear-gradient(135deg, hsl(207 65% 12%), hsl(207 65% 8%));
   --gradient-luxury: linear-gradient(135deg, hsl(216 68% 12%), hsl(270 30% 65%));
 
   /* ── Glassmorphism ── */
@@ -117,11 +117,11 @@
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 
   /* ── Legacy compat vars ── */
-  --gold:          39 100% 56%;
+  --gold:          207 65% 12%;
   --glow-start:    216 68% 15%;
   --glow-mid:      216 68% 12%;
   --glow-end:      216 68% 10%;
-  --gold-sparkle:  39 100% 60%;
+  --gold-sparkle:  207 65% 12%;
   --surface-glass: 0 0% 100%;
 
   /* ── Accessibility vars ── */
@@ -164,7 +164,7 @@
 
   /* ── Luxury Color Palette ── */
   --luxury-navy: 216 68% 12%;
-  --luxury-gold: 39 100% 56%;
+  --luxury-gold: 207 65% 12%;
   --luxury-lilac: 270 30% 65%;
   --luxury-black: 222 47% 8%;
   --luxury-white: 0 0% 100%;
@@ -182,7 +182,7 @@
   /* ── Gradient vars ── */
   --gradient-from: 216 68% 15%;
   --gradient-to:   216 68% 10%;
-  --gradient-gold: linear-gradient(135deg, hsl(39 100% 56%), hsl(39 90% 52%));
+  --gradient-gold: linear-gradient(135deg, hsl(207 65% 12%), hsl(207 65% 8%));
   --gradient-luxury: linear-gradient(135deg, hsl(216 68% 12%), hsl(270 30% 65%));
 
   /* ── Glassmorphism ── */
@@ -191,11 +191,11 @@
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 
   /* ── Legacy compat vars ── */
-  --gold:          39 100% 56%;
+  --gold:          207 65% 12%;
   --glow-start:    216 68% 15%;
   --glow-mid:      216 68% 12%;
   --glow-end:      216 68% 10%;
-  --gold-sparkle:  39 100% 60%;
+  --gold-sparkle:  207 65% 12%;
   --surface-glass: 0 0% 100%;
 
   /* ── Accessibility vars ── */

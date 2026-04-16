@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import SparkleIcon from "@/components/SparkleIcon";
 import { useI18n } from "@/lib/i18n";
 import { useSmartMemory } from "@/hooks/useSmartMemory";
-import { generateText } from "@/lib/ai-service";
+import { generateTimePlan } from "@/lib/ai-service";
 import { saveCreation, trackDownload } from "@/lib/creations-store";
 import {
   ArrowRight, ArrowLeft, Sparkles, Calendar, Clock, AlertTriangle,
@@ -43,13 +43,12 @@ const TimeOptimizerPage = () => {
   const handleOptimize = async () => {
     setIsOptimizing(true);
     try {
-      const systemPrompt = isHe
-        ? "אתה יועץ ניהול זמן לעסקים קטנים. בנה לוח זמנים שבועי מאוזן. הצע חלוקה חכמה שמונעת שחיקה. כתוב בעברית. הדגש מילות מפתח חשובות בתוך סוגריים מרובעים [כך]. חלק את התשובה לנקודות ברורות עם כותרות."
-        : "You are a time management consultant for small businesses. Build a balanced weekly schedule. Highlight key words in [brackets]. Structure the answer with clear headings and bullet points.";
-      const prompt = isHe
-        ? `בנה לי שבוע מאוזן. הנתונים: ${hours} שעות עבודה שבועיות, משכורת/הכנסה ${salaryNum} ₪ לחודש. שירותים: ${servicesList || "כללי"}. תן המלצות מעשיות ומפורטות.`
-        : `Build me a balanced week. Data: ${hours} weekly work hours, salary/income ${salaryNum} ₪/month. Services: ${servicesList || "general"}. Give detailed practical recommendations.`;
-      const result = await generateText(prompt, systemPrompt);
+      const result = await generateTimePlan({
+        weeklyHours: hours,
+        monthlyIncome: salaryNum,
+        services: servicesList,
+        language: isHe ? "hebrew" : "english",
+      });
       setOptimizeResult(result);
       if (result && !result.startsWith("מומלץ לחלק")) {
         saveCreation({
@@ -61,7 +60,8 @@ const TimeOptimizerPage = () => {
           metadata: { hours, salary: salaryNum, burnout },
         });
       }
-    } catch {
+    } catch (err: any) {
+      console.error("Time optimization failed:", err?.message || err);
       setOptimizeResult(isHe ? "מומלץ לחלק את השבוע ל-3 ימים עמוסים ו-2 ימים קלים." : "Recommended: split into 3 heavy days and 2 light days.");
     } finally {
       setIsOptimizing(false);

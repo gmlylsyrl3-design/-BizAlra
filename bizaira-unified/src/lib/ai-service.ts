@@ -25,3 +25,102 @@ export async function generateText(prompt: string, systemPrompt?: string): Promi
 
   return data.text;
 }
+export interface GenerateMessagePayload {
+  messageType: string;
+  tone: string;
+  audience: string;
+  details: string;
+  language?: string;
+  modifier?: string;
+}
+
+export async function generateMessage(payload: GenerateMessagePayload): Promise<string> {
+  const response = await fetch("/api/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+  if (!response.ok || data?.error) {
+    const errorText = data?.error || "Message generation failed";
+    throw new Error(errorText);
+  }
+  if (!data?.message) throw new Error("No message was generated");
+
+  return data.message;
+}
+
+export interface GenerateAnalyticsPayload {
+  revenue: number;
+  expenses: number;
+  clients: number;
+  feeling?: string;
+  tooMuchTime?: string;
+  wantToImprove?: string;
+  question?: string;
+  language?: string;
+}
+
+export async function generateAnalytics(payload: GenerateAnalyticsPayload): Promise<string> {
+  const response = await fetch("/api/generate-analytics", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+  if (!response.ok || data?.error) {
+    const errorText = data?.error || "Analytics generation failed";
+    throw new Error(errorText);
+  }
+  if (!data?.text) throw new Error("No analytics text returned");
+  return data.text;
+}
+
+export interface GenerateTimePlanPayload {
+  weeklyHours: number;
+  monthlyIncome: number;
+  services?: string;
+  language?: string;
+}
+
+export async function generateTimePlan(payload: GenerateTimePlanPayload): Promise<string> {
+  const response = await fetch("/api/generate-time", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+  if (!response.ok || data?.error) {
+    const errorText = data?.error || "Time optimization failed";
+    throw new Error(errorText);
+  }
+  if (!data?.text) throw new Error("No time plan text returned");
+  return data.text;
+}
+
+export interface GeneratePricingPayload {
+  businessType?: string;
+  currentPrice?: string;
+  audience?: string;
+  goals?: string;
+  language?: string;
+}
+
+export async function generatePricing(payload: GeneratePricingPayload): Promise<string> {
+  const response = await fetch("/api/generate-pricing", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json();
+  if (!response.ok || data?.error) {
+    const errorText = data?.error || "Pricing generation failed";
+    throw new Error(errorText);
+  }
+  if (!data?.text) throw new Error("No pricing text returned");
+  return data.text;
+}
