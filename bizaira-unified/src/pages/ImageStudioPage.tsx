@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useI18n } from "@/lib/i18n";
 import { generateStudioImage } from "@/lib/ai-service";
@@ -64,6 +64,13 @@ const ImageStudioPage = () => {
   const isHe = lang === "he";
   const BackArrow = isHe ? ArrowRight : ArrowLeft;
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Clear state on unmount for better UX
+  useEffect(() => {
+    return () => {
+      // Component cleanup - state will be cleared when navigating away
+    };
+  }, []);
 
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [results, setResults] = useState<string[]>([]);

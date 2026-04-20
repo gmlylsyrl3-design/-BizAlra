@@ -24,6 +24,7 @@ import DashboardPage from "./pages/DashboardPage";
 import PricingPage from "./pages/PricingPage";
 import SupportPage from "./pages/SupportPage";
 import VideoStudioPage from "./pages/VideoStudioPage";
+
 import NotFound from "./pages/NotFound";
 import AccessibilityStatement from "./pages/AccessibilityStatement";
 import PrivacyPolicy from "./pages/PrivacyPolicy";

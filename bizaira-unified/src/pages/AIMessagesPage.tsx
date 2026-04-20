@@ -61,7 +61,7 @@ const AIMessagesPage = () => {
       tone: toneLabels[tone] || (isHe ? "מקצועי" : "professional"),
       audience,
       details,
-      language: "hebrew",
+      language: "english",
       modifier: modifier || "",
     };
   };

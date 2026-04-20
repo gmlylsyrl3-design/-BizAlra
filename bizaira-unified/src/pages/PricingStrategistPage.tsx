@@ -19,8 +19,7 @@ const PricingStrategistPage = () => {
   const [serviceDuration, setServiceDuration] = useState("");
   const [materialCost, setMaterialCost] = useState("");
   const [prepTime, setPrepTime] = useState("");
-  const [fixedExpenses, setFixedExpenses] = useState("");
-  const [desiredProfit, setDesiredProfit] = useState("40");
+  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("medium");
   const [calculated, setCalculated] = useState(false);
   const [isSimulating, setIsSimulating] = useState(false);
   const [simResult, setSimResult] = useState("");
@@ -29,13 +28,14 @@ const PricingStrategistPage = () => {
   const duration = Number(serviceDuration) || 60;
   const material = Number(materialCost) || 0;
   const prep = Number(prepTime) || 0;
-  const fixed = Number(fixedExpenses) || 0;
-  const profitPct = Number(desiredProfit) || 30;
+  
+  // Difficulty multiplier for pricing
+  const difficultyMultiplier = difficulty === "easy" ? 1 : difficulty === "medium" ? 1.25 : 1.6;
+  
   const totalHours = (duration + prep) / 60;
-  const hourlyFixed = fixed / 160;
-  const baseCost = material + (hourlyFixed * totalHours);
-  const minPrice = Math.round(baseCost * 1.15);
-  const recommendedPrice = Math.round(baseCost * (1 + profitPct / 100));
+  const baseCost = material;
+  const minPrice = Math.round(baseCost * 1.15 * difficultyMultiplier);
+  const recommendedPrice = Math.round(baseCost * 1.4 * difficultyMultiplier);
   const premiumPrice = Math.round(recommendedPrice * 1.35);
   const hourlyValue = Math.round(recommendedPrice / totalHours);
 
@@ -112,14 +112,24 @@ const PricingStrategistPage = () => {
             <Field label={t("pricing.duration")} icon={<Clock size={12} />} value={serviceDuration} onChange={setServiceDuration} suffix={isHe ? "דק׳" : "min"} placeholder={isHe ? "לדוגמה: 60" : "e.g. 60"} />
             <Field label={t("pricing.materials")} icon={<DollarSign size={12} />} value={materialCost} onChange={setMaterialCost} suffix="₪" placeholder={isHe ? "לדוגמה: 50" : "e.g. 50"} />
             <Field label={t("pricing.prepTime")} icon={<Clock size={12} />} value={prepTime} onChange={setPrepTime} suffix={isHe ? "דק׳" : "min"} placeholder={isHe ? "לדוגמה: 30" : "e.g. 30"} />
-            <Field label={t("pricing.fixedExpenses")} icon={<DollarSign size={12} />} value={fixedExpenses} onChange={setFixedExpenses} suffix="₪" placeholder={isHe ? "לדוגמה: 3000" : "e.g. 3000"} />
           </div>
           <div>
-             <label className="text-xs font-semibold text-foreground mb-1.5 flex items-center justify-between">
-              <span className="flex items-center gap-1"><TrendingUp size={12} />{isHe ? "יעד רווחיות" : "Profitability Target"}</span>
-              <span className="gradient-glow-text font-black">{desiredProfit}%</span>
-            </label>
-            <input type="range" min="10" max="100" value={desiredProfit} onChange={e => setDesiredProfit(e.target.value)} className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-primary" />
+            <label className="text-xs font-semibold text-foreground mb-2.5 flex items-center gap-1"><TrendingUp size={12} />{isHe ? "רמת מאמץ" : "Difficulty Effort"}</label>
+            <div className="flex gap-2">
+              {(["easy", "medium", "hard"] as const).map(level => (
+                <button
+                  key={level}
+                  onClick={() => setDifficulty(level)}
+                  className={`flex-1 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                    difficulty === level
+                      ? "gradient-glow text-primary-foreground"
+                      : "glass-card text-foreground hover:border-primary/50"
+                  }`}
+                >
+                  {isHe ? (level === "easy" ? "קל" : level === "medium" ? "בינוני" : "קשה") : (level === "easy" ? "Easy" : level === "medium" ? "Medium" : "Hard")}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 

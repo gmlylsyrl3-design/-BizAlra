@@ -46,17 +46,16 @@ const BusinessAnalyticsPage = () => {
 
   // Simulate monthly data for table
   const currentMonth = new Date().getMonth();
-  const monthlyData = Array.from({ length: 6 }, (_, i) => {
-    const monthIdx = (currentMonth - 5 + i + 12) % 12;
-    const factor = 0.7 + (i * 0.08) + Math.random() * 0.15;
-    return {
-      month: isHe ? MONTHS_HE[monthIdx] : MONTHS_EN[monthIdx],
-      revenue: Math.round(revenue * factor),
-      expenses: Math.round(expenses * (0.85 + Math.random() * 0.2)),
-      clients: Math.round(clients * factor),
-      growth: i === 0 ? 0 : Math.round((factor - (0.7 + ((i - 1) * 0.08))) * 100),
-    };
-  });
+  // Only show real monthly data from history, don't fabricate data
+  const monthlyData = history && history.length > 0 
+    ? history.map((entry, i) => ({
+        month: isHe ? MONTHS_HE[entry.month] : MONTHS_EN[entry.month],
+        revenue: entry.revenue || 0,
+        expenses: entry.expenses || 0,
+        clients: entry.clients || 0,
+        growth: i === 0 ? 0 : Math.round(((entry.revenue - (history[i-1]?.revenue || entry.revenue)) / (history[i-1]?.revenue || entry.revenue || 1)) * 100),
+      }))
+    : [];
 
   const handleStartAnalysis = async () => {
     if (revenue <= 0) return;

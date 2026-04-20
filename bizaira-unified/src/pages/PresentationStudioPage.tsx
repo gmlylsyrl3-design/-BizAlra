@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useI18n } from "@/lib/i18n";
 import { generateText } from "@/lib/ai-service";
+import { useToast } from "@/hooks/use-toast";
 import SparkleIcon from "@/components/SparkleIcon";
 import {
   ArrowRight, ArrowLeft, Sparkles, ChevronLeft, ChevronRight,
@@ -69,6 +70,7 @@ function defaultSlides(lang: "he" | "en"): Slide[] {
 // ─── Main Component ───
 const PresentationStudioPage = () => {
   const { t, lang } = useI18n();
+  const { toast } = useToast();
   const isHe = lang === "he";
   const BackArrow = isHe ? ArrowRight : ArrowLeft;
   const imageRef = useRef<HTMLInputElement>(null);
@@ -126,13 +128,37 @@ const PresentationStudioPage = () => {
       const result = await generateText(prompt, systemPrompt);
       const jsonMatch = result.match(/\[[\s\S]*\]/);
       if (jsonMatch) {
-        const parsed = JSON.parse(jsonMatch[0]) as { title: string; subtitle?: string; body: string }[];
-        const layouts: Slide["layout"][] = ["center", "left-image", "right-image", "center", "left-image", "center", "center"];
-        setSlides(parsed.map((s, i) => ({ id: makeId(), title: s.title, subtitle: s.subtitle || "", body: s.body, layout: layouts[i % layouts.length] })));
-        setActiveIdx(0);
+        try {
+          const parsed = JSON.parse(jsonMatch[0]) as { title: string; subtitle?: string; body: string }[];
+          const layouts: Slide["layout"][] = ["center", "left-image", "right-image", "center", "left-image", "center", "center"];
+          setSlides(parsed.map((s, i) => ({ id: makeId(), title: s.title, subtitle: s.subtitle || "", body: s.body, layout: layouts[i % layouts.length] })));
+          setActiveIdx(0);
+          toast({
+            title: isHe ? "המצגת נוצרה בהצלחה!" : "Presentation created successfully!",
+            description: isHe ? "התוכן הופק באמצעות AI ומוכן לעריכה" : "Content generated with AI and ready for editing",
+          });
+        } catch (parseError) {
+          console.error("JSON parsing failed:", parseError);
+          toast({
+            title: isHe ? "שגיאה ביצירת המצגת" : "Presentation creation error",
+            description: isHe ? "התוכן שנוצר אינו בפורמט תקין. נסה שוב או צור קשר עם התמיכה" : "Generated content is not in valid format. Please try again or contact support",
+            variant: "destructive",
+          });
+        }
+      } else {
+        toast({
+          title: isHe ? "שגיאה ביצירת המצגת" : "Presentation creation error",
+          description: isHe ? "לא הצלחנו ליצור תוכן למצגת. נסה שוב" : "Failed to generate presentation content. Please try again",
+          variant: "destructive",
+        });
       }
     } catch (err) {
       console.error("AI generation failed:", err);
+      toast({
+        title: isHe ? "שגיאה ביצירת המצגת" : "Presentation creation error",
+        description: isHe ? "אירעה שגיאה ביצירת התוכן. נסה שוב מאוחר יותר" : "An error occurred while generating content. Please try again later",
+        variant: "destructive",
+      });
     } finally {
       setIsGenerating(false);
     }

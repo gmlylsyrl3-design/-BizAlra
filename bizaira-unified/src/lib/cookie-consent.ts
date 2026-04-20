@@ -85,14 +85,14 @@ export const loadHotjar = async (hjid: string, hjsv: string) => {
 export const loadTrackingScripts = async (consent: CookieConsent) => {
   // Load analytics if consented
   if (consent.analytics) {
-    // Replace with actual IDs
-    await loadGoogleAnalytics('GA_MEASUREMENT_ID');
-    await loadHotjar('HJID', 'HJSV');
+    // Development placeholders - replace with actual IDs in production
+    await loadGoogleAnalytics('G-XXXXXXXXXX');
+    await loadHotjar('1234567', '6');
   }
 
   // Load marketing if consented
   if (consent.marketing) {
-    await loadMetaPixel('PIXEL_ID');
-    await loadGoogleTagManager('GTM_ID');
+    await loadMetaPixel('123456789012345');
+    await loadGoogleTagManager('GTM-XXXXXXX');
   }
 };

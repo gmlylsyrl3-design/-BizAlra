@@ -45,6 +45,8 @@ const translations: Translations = {
   "tool.time.desc": { he: "אופטימיזציה חכמה", en: "Smart optimization" },
   "tool.pricing.title": { he: "תמחור חכם", en: "Smart Pricing" },
   "tool.pricing.desc": { he: "אסטרטגיית מחירים", en: "Pricing strategy" },
+  "tool.presentation.title": { he: "סטודיו מצגות", en: "Presentation Studio" },
+  "tool.presentation.desc": { he: "מצגות עסקיות מקצועיות", en: "Professional business presentations" },
   "tool.studio.title": { he: "סטודיו תמונות", en: "Photo Studio" },
   "tool.studio.desc": { he: "תמונות מוצר, לוגו, פרופיל עסקי וסטורי", en: "Product photos, logos, profiles & stories" },
 

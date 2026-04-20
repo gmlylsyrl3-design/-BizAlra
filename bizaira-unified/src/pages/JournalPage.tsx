@@ -39,7 +39,7 @@ const saveTasks = (tasks: Task[]) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
 };
 
-type View = "day" | "week";
+type View = "day" | "week" | "month";
 type AddModalState = { open: boolean; defaultDate: string };
 
 const JournalPage = () => {
@@ -48,7 +48,7 @@ const JournalPage = () => {
   const locale = isHe ? he : enUS;
 
   const [tasks, setTasks] = useState<Task[]>(loadTasks);
-  const [view, setView] = useState<View>("day");
+  const [view, setView] = useState<View>("month");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [addModal, setAddModal] = useState<AddModalState>({ open: false, defaultDate: todayStr() });
   const [editingTask, setEditingTask] = useState<Task | null>(null);
