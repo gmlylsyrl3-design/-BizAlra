@@ -63,7 +63,7 @@
   --popover-foreground: 222 47% 8%;
 
   /* ── Primary = Deep Navy ── */
-  --primary:            219 65% 12%;
+  --primary:            213 67% 5%;
   --primary-foreground: 0 0% 100%;
 
   /* ── Secondary / Muted ── */
@@ -137,17 +137,17 @@
   --foreground:    222 47% 8%;
 
   /* ── Primary = Deep Navy ── */
-  --primary:            219 65% 12%;
+  --primary:            213 67% 5%;
   --primary-foreground: 0 0% 100%;
 
   /* ── Secondary / Muted ── */
   --secondary:             220 20% 96%;
-  --secondary-foreground:  219 65% 12%;
+  --secondary-foreground:  213 67% 5;
   --muted:                 220 18% 97%;
   --muted-foreground:      220 12% 45%;
 
   /* ── Accent = Navy Blue #0D2344 ── */
-  --accent:            216 68% 12%;
+  --accent:            213 67% 5%;
   --accent-foreground: 0 0% 100%;
 
   /* ── Destructive ── */

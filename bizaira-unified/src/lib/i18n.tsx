@@ -16,7 +16,7 @@ const translations: Translations = {
 
   // Home
   "home.hero.title1": { he: "ה-AI שיוצר לעסק שלך", en: "AI That Creates For Your Business" },
-  "home.hero.title2": { he: "השותף העסקי שלך", en: "Everything In One Place" },
+  "home.hero.title2": { he: "המוח העסקי שלך", en: "Your Business Brain" },
   "home.hero.desc": { he: "יצירת תמונות מוצר, תוכן שיווקי, ניתוח עסקי ועוד — בתוך כמה שניות בלבד בעזרת AI.", en: "Create product photos, marketing content, business analytics and more — in just seconds with AI." },
   "home.slide1.title": { he: "תוכן שיווקי חכם", en: "Smart Marketing Content" },
   "home.slide1.desc": { he: "צרו הודעות שיווקיות מקצועיות, תמונות מוצר ותוכן לרשתות — הכול אוטומטי עם AI.", en: "Create professional marketing messages, product photos and social content — all automated with AI." },
