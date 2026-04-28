@@ -12,6 +12,7 @@ import {
   loadCreations, deleteCreation, trackDownload,
   type Creation, type CreationType,
 } from "@/lib/creations-store";
+import { getActivityStats } from "@/lib/activity-tracker";
 
 const NAVY         = "hsl(var(--luxury-navy))";
 const PURPLE       = "hsl(var(--luxury-navy))";
@@ -56,12 +57,10 @@ const DashboardPage = () => {
   const usagePct     = Math.round((Math.min(usageUsed, usageLimit) / usageLimit) * 100);
 
   const refreshData = useCallback(() => {
-    const s1 = localStorage.getItem(STORAGE_KEYS.firstUseDate);
-    const s2 = localStorage.getItem(STORAGE_KEYS.creationsCount);
-    const s3 = localStorage.getItem(STORAGE_KEYS.downloadsCount);
-    if (s1) setFirstUseDate(s1);
-    if (s2) setCreationsCount(parseInt(s2, 10) || 0);
-    if (s3) setDownloadsCount(parseInt(s3, 10) || 0);
+    const stats = getActivityStats();
+    setFirstUseDate(stats.firstUseDate);
+    setCreationsCount(stats.creationsCount);
+    setDownloadsCount(stats.downloadsCount);
     setCreations(loadCreations());
   }, []);
 

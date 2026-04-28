@@ -21,17 +21,25 @@ const TimeOptimizerPage = () => {
   const [selectedActivity, setSelectedActivity] = useState("");
   const [otherActivity, setOtherActivity] = useState("");
   const [dataEntered, setDataEntered] = useState(false);
+  const [burnout, setBurnout] = useState(0);
 
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [optimizeResult, setOptimizeResult] = useState("");
 
+  const hours = Number(weeklyHours) || 0;
+  const salaryNum = Number(salary) || 0;
+  const hourlyValue = hours > 0 ? Math.round((salaryNum / 4) / hours) : 0;
   const servicesText = selectedActivity === "אחר" ? otherActivity : selectedActivity;
 
   const proFeatures = [t("time.proLoadForecast"), t("time.proServiceSim"), t("time.proProfitDay"), t("time.proPricingRec")];
 
+  const calculateBurnout = (hoursValue: number) => Math.min(100, Math.max(10, Math.round((hoursValue / 40) * 100)));
+
   const handleStartAnalysis = () => {
-    if (hours > 0) {
-      saveEntry({ hours, hourlyValue, burnout });
+    if (hours > 0 && salaryNum > 0) {
+      const calculatedBurnout = calculateBurnout(hours);
+      setBurnout(calculatedBurnout);
+      saveEntry({ hours, hourlyValue, burnout: calculatedBurnout, monthlyIncome: salaryNum });
       setDataEntered(true);
     }
   };
@@ -48,7 +56,7 @@ const TimeOptimizerPage = () => {
         language: isHe ? "hebrew" : "english",
       });
       setOptimizeResult(result);
-      if (result && !result.startsWith("מומלץ לחלק")) {
+      if (result) {
         saveCreation({
           type: "time",
           title: isHe ? "ניהול זמן שבועי" : "Weekly Time Plan",

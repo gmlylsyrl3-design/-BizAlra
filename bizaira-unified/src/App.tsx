@@ -38,7 +38,8 @@ import AdminAIPage from "./pages/admin/AdminAIPage";
 import AdminUsersPage from "./pages/admin/AdminUsersPage";
 import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
 
-import { CookieConsent, getCookieConsent, loadTrackingScripts } from "@/lib/cookie-consent";
+import { CookieConsent, getCookieConsent, loadTrackingScripts, setCookieConsent } from "@/lib/cookie-consent";
+import { hardResetApp } from "@/lib/safe-storage";
 import AccessibilityWidget from "@/components/AccessibilityWidget";
 
 const queryClient = new QueryClient();
@@ -51,12 +52,29 @@ const App = () => {
     if (!consent) {
       setShowConsent(true);
     } else {
-      loadTrackingScripts(consent);
+      loadTrackingScripts(consent).catch((error) => {
+        console.warn("Tracking scripts did not load:", error);
+      });
     }
+
+    const recover = (event: Event | PromiseRejectionEvent) => {
+      console.error("Global app error detected, forcing recovery:", event);
+      hardResetApp();
+    };
+
+    window.addEventListener("error", recover);
+    window.addEventListener("unhandledrejection", recover);
+
+    return () => {
+      window.removeEventListener("error", recover);
+      window.removeEventListener("unhandledrejection", recover);
+    };
   }, []);
 
   const handleConsent = (consent: CookieConsent) => {
     setShowConsent(false);
+    setCookieConsent(consent);
+    loadTrackingScripts(consent).catch((error) => console.warn("Tracking scripts failed to load:", error));
   };
 
   return (

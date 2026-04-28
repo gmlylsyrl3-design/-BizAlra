@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useI18n } from "@/lib/i18n";
+import { safeGetItem, safeSetItem } from "@/lib/safe-storage";
 import {
   Plus, Check, Clock, Star, StarOff, ChevronLeft, ChevronRight,
   Trash2, X, CalendarDays, Bell, BellOff, CalendarClock, Edit3,
@@ -31,13 +32,16 @@ const todayStr = () => format(new Date(), "yyyy-MM-dd");
 
 const loadTasks = (): Task[] => {
   try {
-    const s = localStorage.getItem(STORAGE_KEY);
+    const s = safeGetItem(STORAGE_KEY);
     return s ? JSON.parse(s) : [];
-  } catch { return []; }
+  } catch {
+    safeSetItem(STORAGE_KEY, JSON.stringify([]));
+    return [];
+  }
 };
 
 const saveTasks = (tasks: Task[]) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  safeSetItem(STORAGE_KEY, JSON.stringify(tasks));
 };
 
 type View = "day" | "week" | "month";

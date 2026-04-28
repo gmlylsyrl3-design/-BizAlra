@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useI18n } from "@/lib/i18n";
 import { generateStudioImage } from "@/lib/ai-service";
-import { trackCreation, trackDownload } from "@/lib/activity-tracker";
+import { getActivityStats, trackCreation, trackDownload } from "@/lib/activity-tracker";
 import SparkleIcon from "@/components/SparkleIcon";
 import {
   ArrowRight, ArrowLeft, Upload, X, Download, RefreshCw,
@@ -41,24 +41,6 @@ const RATIOS = [
   { id: "16:9", icon: RectangleHorizontal, label: "16:9" },
 ];
 
-const USAGE_KEY = "bizaira_image_studio_usage";
-
-function getUsage(): { count: number; month: number } {
-  try {
-    const raw = localStorage.getItem(USAGE_KEY);
-    if (!raw) return { count: 0, month: new Date().getMonth() };
-    const parsed = JSON.parse(raw);
-    if (parsed.month !== new Date().getMonth()) return { count: 0, month: new Date().getMonth() };
-    return parsed;
-  } catch { return { count: 0, month: new Date().getMonth() }; }
-}
-
-function incrementUsage() {
-  const usage = getUsage();
-  usage.count += 1;
-  localStorage.setItem(USAGE_KEY, JSON.stringify(usage));
-}
-
 const ImageStudioPage = () => {
   const { t, lang } = useI18n();
   const isHe = lang === "he";
@@ -85,9 +67,9 @@ const ImageStudioPage = () => {
   const [description, setDescription] = useState("");
   const [sidebarTab, setSidebarTab] = useState<"type" | "style" | "details">("type");
 
-  const usage = getUsage();
-  const isLocked = usage.count >= 5;
-  const remaining = Math.max(0, 5 - usage.count);
+  const { creationsCount: usageCount } = getActivityStats();
+  const isLocked = usageCount >= 5;
+  const remaining = Math.max(0, 5 - usageCount);
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -116,7 +98,6 @@ const ImageStudioPage = () => {
       if (imageUrls.length === 0) throw new Error("Generation failed");
       setResults(imageUrls);
       setActiveResult(0);
-      incrementUsage();
       trackCreation();
     } catch (err) {
       console.error("Generation failed:", err);

@@ -1,11 +1,11 @@
 import { ReactNode, useState } from "react";
 import BottomNav from "./BottomNav";
 import CookieSettings from "./CookieSettings";
-import { LanguageToggle } from "@/lib/i18n";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Home, Wand2, HelpCircle, User } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/hooks/useAuth";
+import { safeParseInt } from "@/lib/safe-storage";
 
 interface LayoutProps {
   children: ReactNode;
@@ -14,9 +14,10 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   const { t, lang } = useI18n();
   const isHe = lang === "he";
-  const { profile } = useAuth();
+  const { user, profile } = useAuth();
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const usageUsed = profile?.credits_used ?? Number(window.localStorage.getItem("bizaira_creations_count") || "0");
+  const usageUsed = profile?.credits_used ?? safeParseInt("bizaira_creations_count", 0);
   const usageLimit = 5;
   const isLocked = usageUsed >= usageLimit;
 
@@ -81,9 +82,6 @@ const Layout = ({ children }: LayoutProps) => {
       )}
 
       {/* Language toggle — floating top corner */}
-      <div className="fixed top-3 left-3 z-50">
-        <LanguageToggle />
-      </div>
       <main id="main-content" className="flex-1 pb-20">{children}</main>
       {isLocked && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-6">
@@ -110,7 +108,7 @@ const Layout = ({ children }: LayoutProps) => {
           <CookieSettings />
         </div>
       </footer>
-      <BottomNav />
+      {!(!user && location.pathname === "/") && <BottomNav />}
     </div>
   );
 };

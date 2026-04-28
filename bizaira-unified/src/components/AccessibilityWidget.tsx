@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { safeGetItem, safeRemoveItem, safeSetItem } from '@/lib/safe-storage';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
@@ -40,11 +41,16 @@ const AccessibilityWidget = () => {
   const [settings, setSettings] = useState<AccessibilitySettings>(defaultSettings);
 
   useEffect(() => {
-    const stored = localStorage.getItem(ACCESSIBILITY_KEY);
+    const stored = safeGetItem(ACCESSIBILITY_KEY);
     if (stored) {
-      const parsed = JSON.parse(stored);
-      setSettings({ ...defaultSettings, ...parsed });
-      applySettings({ ...defaultSettings, ...parsed });
+      try {
+        const parsed = JSON.parse(stored);
+        setSettings({ ...defaultSettings, ...parsed });
+        applySettings({ ...defaultSettings, ...parsed });
+      } catch (error) {
+        console.warn('Invalid accessibility settings:', error);
+        safeRemoveItem(ACCESSIBILITY_KEY);
+      }
     }
   }, []);
 
@@ -65,13 +71,13 @@ const AccessibilityWidget = () => {
     const newSettings = { ...settings, [key]: value };
     setSettings(newSettings);
     applySettings(newSettings);
-    localStorage.setItem(ACCESSIBILITY_KEY, JSON.stringify(newSettings));
+    safeSetItem(ACCESSIBILITY_KEY, JSON.stringify(newSettings));
   };
 
   const resetSettings = () => {
     setSettings(defaultSettings);
     applySettings(defaultSettings);
-    localStorage.setItem(ACCESSIBILITY_KEY, JSON.stringify(defaultSettings));
+    safeSetItem(ACCESSIBILITY_KEY, JSON.stringify(defaultSettings));
   };
 
   if (settings.hideWidget) return null;

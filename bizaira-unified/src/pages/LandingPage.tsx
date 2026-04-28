@@ -4,6 +4,7 @@ import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/hooks/useAuth";
 import OnboardingFlow from "@/components/OnboardingFlow";
 import AuthSection from "@/components/AuthSection";
+import HomePage from "@/pages/HomePage";
 
 type Step = "onboarding" | "main";
 
@@ -30,6 +31,10 @@ const LandingPage = () => {
 
   if (step === "onboarding" && !user) {
     return <OnboardingFlow onComplete={onOnboardingComplete} />;
+  }
+
+  if (user) {
+    return <HomePage />;
   }
 
   // Main: Hero title + Auth or Welcome

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { safeSetItem } from "@/lib/safe-storage";
 import { toast } from "sonner";
 import {
   Sparkles, ArrowLeft, Check,
@@ -449,7 +450,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
                   target_audience: audience,
                   business_goals: goal,
                 };
-                
+
                 if (user) {
                   // Save to profile if user is logged in
                   const { error } = await supabase
@@ -459,16 +460,16 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
                       onboarding_completed: true,
                     })
                     .eq("user_id", user.id);
-                  
+
                   if (error) {
                     toast.error(isHe ? "שגיאה בשמירת הנתונים" : "Error saving data");
                     return;
                   }
                 } else {
                   // Store in localStorage for later
-                  localStorage.setItem("bizaira_onboarding", JSON.stringify(onboardingData));
+                  safeSetItem("bizaira_onboarding", JSON.stringify(onboardingData));
                 }
-                
+
                 onComplete();
               }}
               className="w-full py-4 rounded-2xl font-bold text-lg gradient-glow text-white glow-shadow hover:scale-[1.02] transition-all flex items-center justify-center gap-2"

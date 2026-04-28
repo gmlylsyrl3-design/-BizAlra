@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { safeGetItem, safeSetItem } from "@/lib/safe-storage";
 
 interface HistoryEntry {
   date: string;
@@ -18,7 +19,7 @@ export function useSmartMemory(featureKey: string): SmartMemoryResult {
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(storageKey);
+      const stored = safeGetItem(storageKey);
       if (stored) setHistory(JSON.parse(stored));
     } catch { /* ignore */ }
   }, [storageKey]);
@@ -27,7 +28,7 @@ export function useSmartMemory(featureKey: string): SmartMemoryResult {
     const entry: HistoryEntry = { date: new Date().toISOString(), data };
     setHistory(prev => {
       const updated = [...prev, entry].slice(-20); // keep last 20
-      localStorage.setItem(storageKey, JSON.stringify(updated));
+      safeSetItem(storageKey, JSON.stringify(updated));
       return updated;
     });
   }, [storageKey]);

@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { safeGetItem, safeRemoveItem, hardResetApp } from "@/lib/safe-storage";
 import type { User, Session } from "@supabase/supabase-js";
 
 interface AuthContextType {
@@ -45,51 +46,85 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
 
+  const recoverAuthState = () => {
+    console.warn("Recovering auth state due to corrupted session or profile data.");
+    hardResetApp();
+  };
+
   const fetchProfile = async (userId: string) => {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", userId)
+        .single();
 
-    if (error && error.code === 'PGRST116') { // No rows returned
-      // Create profile if it doesn't exist
-      const { data: user } = await supabase.auth.getUser();
-      if (user.user) {
-        const onboardingData = localStorage.getItem("bizaira_onboarding");
-        const parsedOnboarding = onboardingData ? JSON.parse(onboardingData) : {};
-        
-        const { data: newProfile, error: insertError } = await supabase
-          .from("profiles")
-          .insert({
-            user_id: userId,
-            email: user.user.email!,
-            full_name: user.user.user_metadata?.full_name || null,
-            ...parsedOnboarding,
-            onboarding_completed: true,
-          })
-          .select()
-          .single();
-
-        if (!insertError && newProfile) {
-          localStorage.removeItem("bizaira_onboarding");
-          setProfile(newProfile as Profile);
+      if (error && error.code === 'PGRST116') {
+        const { data: user, error: userError } = await supabase.auth.getUser();
+        if (userError) {
+          console.warn("Failed to retrieve user during profile recovery:", userError);
+          recoverAuthState();
           return;
         }
-      }
-    }
+        if (user?.user) {
+          const onboardingData = safeGetItem("bizaira_onboarding");
+          let parsedOnboarding = {};
+          if (onboardingData) {
+            try {
+              parsedOnboarding = JSON.parse(onboardingData);
+            } catch (fetchError) {
+              console.warn('Invalid onboarding data:', fetchError);
+              safeRemoveItem("bizaira_onboarding");
+              parsedOnboarding = {};
+            }
+          }
 
-    if (data) setProfile(data as Profile);
+          const { data: newProfile, error: insertError } = await supabase
+            .from("profiles")
+            .insert({
+              user_id: user.user.id,
+              email: user.user.email || "",
+              full_name: user.user.user_metadata?.full_name || null,
+              ...parsedOnboarding,
+              onboarding_completed: true,
+            })
+            .select()
+            .single();
+
+          if (!insertError && newProfile) {
+            safeRemoveItem("bizaira_onboarding");
+            setProfile(newProfile as Profile);
+            return;
+          }
+          if (insertError) {
+            console.warn("Failed to create missing profile:", insertError);
+            recoverAuthState();
+            return;
+          }
+        }
+      }
+
+      if (data) setProfile(data as Profile);
+      else setProfile(null);
+    } catch (fetchError) {
+      console.warn("Failed to load profile:", fetchError);
+      recoverAuthState();
+    }
   };
 
   const checkAdmin = async (userId: string) => {
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    setIsAdmin(!!data);
+    try {
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId)
+        .eq("role", "admin")
+        .maybeSingle();
+      setIsAdmin(!!data);
+    } catch (error) {
+      console.warn("Failed to load admin role:", error);
+      setIsAdmin(false);
+    }
   };
 
   const refreshProfile = async () => {
@@ -97,34 +132,51 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+    let unsubscribe = () => {};
+
+    try {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        async (_event, session) => {
+          setSession(session);
+          setUser(session?.user ?? null);
+          if (session?.user) {
+            try {
+              await fetchProfile(session.user.id);
+              await checkAdmin(session.user.id);
+            } catch (error) {
+              console.warn("Auth state recovery failed:", error);
+              recoverAuthState();
+            }
+          } else {
+            setProfile(null);
+            setIsAdmin(false);
+          }
+          setLoading(false);
+        }
+      );
+
+      unsubscribe = () => subscription.unsubscribe();
+    } catch (subscriptionError) {
+      console.warn("Failed to subscribe to auth changes:", subscriptionError);
+      recoverAuthState();
+    }
+
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
-          setTimeout(() => {
-            fetchProfile(session.user.id);
-            checkAdmin(session.user.id);
-          }, 0);
-        } else {
-          setProfile(null);
-          setIsAdmin(false);
+          fetchProfile(session.user.id);
+          checkAdmin(session.user.id);
         }
         setLoading(false);
-      }
-    );
+      })
+      .catch((error) => {
+        console.warn("Failed to restore auth session:", error);
+        recoverAuthState();
+      });
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchProfile(session.user.id);
-        checkAdmin(session.user.id);
-      }
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    return () => unsubscribe();
   }, []);
 
   const signOut = async () => {

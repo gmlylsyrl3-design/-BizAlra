@@ -1,15 +1,19 @@
 export async function generateImage(prompt: string, editImage?: string): Promise<string> {
-  const response = await fetch("/api/generate-image", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt, editImage }),
-  });
+  try {
+    const response = await fetch("/api/generate-image", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt, editImage }),
+    });
 
-  const data = await response.json();
-  if (!response.ok || data?.error) throw new Error(data?.error || "Image generation failed");
-  if (!data?.imageUrl) throw new Error("No image returned");
+    const data = await response.json();
+    if (!response.ok || data?.error) throw new Error(data?.error || "Image generation failed");
+    if (!data?.imageUrl) throw new Error("No image returned");
 
-  return data.imageUrl;
+    return data.imageUrl;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : "Network error generating image");
+  }
 }
 
 export interface GenerateStudioImagePayload {
@@ -22,31 +26,39 @@ export interface GenerateStudioImagePayload {
 }
 
 export async function generateStudioImage(payload: GenerateStudioImagePayload): Promise<string[]> {
-  const response = await fetch("/api/image-studio", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const response = await fetch("/api/image-studio", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-  const data = await response.json();
-  if (!response.ok || data?.error) throw new Error(data?.error || "Image Studio generation failed");
-  if (!Array.isArray(data?.imageUrls) || data.imageUrls.length === 0) throw new Error("No images returned");
+    const data = await response.json();
+    if (!response.ok || data?.error) throw new Error(data?.error || "Image Studio generation failed");
+    if (!Array.isArray(data?.imageUrls) || data.imageUrls.length === 0) throw new Error("No images returned");
 
-  return data.imageUrls;
+    return data.imageUrls;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : "Network error generating studio image");
+  }
 }
 
 export async function generateText(prompt: string, systemPrompt?: string): Promise<string> {
-  const response = await fetch("/api/generate-text", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt, systemPrompt }),
-  });
+  try {
+    const response = await fetch("/api/generate-text", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt, systemPrompt }),
+    });
 
-  const data = await response.json();
-  if (!response.ok || data?.error) throw new Error(data?.error || "Text generation failed");
-  if (!data?.text) throw new Error("No text returned");
+    const data = await response.json();
+    if (!response.ok || data?.error) throw new Error(data?.error || "Text generation failed");
+    if (!data?.text) throw new Error("No text returned");
 
-  return data.text;
+    return data.text;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : "Network error generating text");
+  }
 }
 export interface GenerateMessagePayload {
   messageType: string;
@@ -58,20 +70,24 @@ export interface GenerateMessagePayload {
 }
 
 export async function generateMessage(payload: GenerateMessagePayload): Promise<string> {
-  const response = await fetch("/api/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-  const data = await response.json();
-  if (!response.ok || data?.error) {
-    const errorText = data?.error || "Message generation failed";
-    throw new Error(errorText);
+    const data = await response.json();
+    if (!response.ok || data?.error) {
+      const errorText = data?.error || "Message generation failed";
+      throw new Error(errorText);
+    }
+    if (!data?.text) throw new Error("No message was generated");
+
+    return data.text;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : "Network error generating message");
   }
-  if (!data?.text) throw new Error("No message was generated");
-
-  return data.text;
 }
 
 export interface GenerateAnalyticsPayload {
@@ -86,19 +102,23 @@ export interface GenerateAnalyticsPayload {
 }
 
 export async function generateAnalytics(payload: GenerateAnalyticsPayload): Promise<string> {
-  const response = await fetch("/api/generate-analytics", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const response = await fetch("/api/generate-analytics", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-  const data = await response.json();
-  if (!response.ok || data?.error) {
-    const errorText = data?.error || "Analytics generation failed";
-    throw new Error(errorText);
+    const data = await response.json();
+    if (!response.ok || data?.error) {
+      const errorText = data?.error || "Analytics generation failed";
+      throw new Error(errorText);
+    }
+    if (!data?.text) throw new Error("No analytics text returned");
+    return data.text;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : "Network error generating analytics");
   }
-  if (!data?.text) throw new Error("No analytics text returned");
-  return data.text;
 }
 
 export interface GenerateTimePlanPayload {
@@ -109,19 +129,23 @@ export interface GenerateTimePlanPayload {
 }
 
 export async function generateTimePlan(payload: GenerateTimePlanPayload): Promise<string> {
-  const response = await fetch("/api/generate-time", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const response = await fetch("/api/generate-time", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-  const data = await response.json();
-  if (!response.ok || data?.error) {
-    const errorText = data?.error || "Time optimization failed";
-    throw new Error(errorText);
+    const data = await response.json();
+    if (!response.ok || data?.error) {
+      const errorText = data?.error || "Time optimization failed";
+      throw new Error(errorText);
+    }
+    if (!data?.text) throw new Error("No time plan text returned");
+    return data.text;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : "Network error generating time plan");
   }
-  if (!data?.text) throw new Error("No time plan text returned");
-  return data.text;
 }
 
 export interface GeneratePricingPayload {
@@ -133,17 +157,21 @@ export interface GeneratePricingPayload {
 }
 
 export async function generatePricing(payload: GeneratePricingPayload): Promise<string> {
-  const response = await fetch("/api/generate-pricing", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const response = await fetch("/api/generate-pricing", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-  const data = await response.json();
-  if (!response.ok || data?.error) {
-    const errorText = data?.error || "Pricing generation failed";
-    throw new Error(errorText);
+    const data = await response.json();
+    if (!response.ok || data?.error) {
+      const errorText = data?.error || "Pricing generation failed";
+      throw new Error(errorText);
+    }
+    if (!data?.text) throw new Error("No pricing text returned");
+    return data.text;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : "Network error generating pricing");
   }
-  if (!data?.text) throw new Error("No pricing text returned");
-  return data.text;
 }

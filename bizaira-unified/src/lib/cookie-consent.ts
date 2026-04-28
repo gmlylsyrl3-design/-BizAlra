@@ -5,15 +5,24 @@ export interface CookieConsent {
 
 export const COOKIE_CONSENT_KEY = 'cookieConsent';
 
+import { safeGetItem, safeRemoveItem, safeSetItem } from '@/lib/safe-storage';
+
 export const getCookieConsent = (): CookieConsent | null => {
   if (typeof window === 'undefined') return null;
-  const stored = localStorage.getItem(COOKIE_CONSENT_KEY);
-  return stored ? JSON.parse(stored) : null;
+  const stored = safeGetItem(COOKIE_CONSENT_KEY);
+  if (!stored) return null;
+  try {
+    return JSON.parse(stored);
+  } catch (error) {
+    console.warn('Invalid cookie consent data:', error);
+    safeRemoveItem(COOKIE_CONSENT_KEY);
+    return null;
+  }
 };
 
 export const setCookieConsent = (consent: CookieConsent) => {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(consent));
+  safeSetItem(COOKIE_CONSENT_KEY, JSON.stringify(consent));
 };
 
 export const loadScript = (src: string, id?: string): Promise<void> => {

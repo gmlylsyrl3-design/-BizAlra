@@ -1,3 +1,6 @@
+import { trackCreation as trackCreationMetric, trackDownload as trackDownloadMetric } from "@/lib/activity-tracker";
+import { safeGetItem, safeSetItem } from "@/lib/safe-storage";
+
 export type CreationType = "message" | "analytics" | "pricing" | "time" | "image" | "photo";
 
 export interface Creation {
@@ -16,9 +19,10 @@ const MAX_CREATIONS = 50;
 
 export function loadCreations(): Creation[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = safeGetItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : [];
   } catch {
+    safeSetItem(STORAGE_KEY, JSON.stringify([]));
     return [];
   }
 }
@@ -34,21 +38,16 @@ export function saveCreation(creation: Omit<Creation, "id" | "createdAt" | "upda
 
   const existing = loadCreations();
   const updated = [newCreation, ...existing].slice(0, MAX_CREATIONS);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  safeSetItem(STORAGE_KEY, JSON.stringify(updated));
 
-  // Increment creations count for dashboard stats
-  const count = parseInt(localStorage.getItem("bizaira_creations_count") || "0", 10);
-  localStorage.setItem("bizaira_creations_count", String(count + 1));
-  if (!localStorage.getItem("bizaira_first_credit_use")) {
-    localStorage.setItem("bizaira_first_credit_use", now);
-  }
+  trackCreationMetric();
 
   return newCreation;
 }
 
 export function deleteCreation(id: string): void {
   const existing = loadCreations();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(existing.filter(c => c.id !== id)));
+  safeSetItem(STORAGE_KEY, JSON.stringify(existing.filter(c => c.id !== id)));
 }
 
 export function getCreationsByType(type: CreationType): Creation[] {
@@ -60,8 +59,7 @@ export function getRecentCreations(limit = 10): Creation[] {
 }
 
 export function trackDownload(): void {
-  const count = parseInt(localStorage.getItem("bizaira_downloads_count") || "0", 10);
-  localStorage.setItem("bizaira_downloads_count", String(count + 1));
+  trackDownloadMetric();
 }
 
 export const TYPE_LABELS: Record<CreationType, { he: string; en: string; color: string }> = {
