@@ -25,7 +25,7 @@ const BottomNav = () => {
     { 
       to: "/dashboard", 
       icon: User, 
-      labelHe: "פרופיל",
+      labelHe: "אזור אישי",
       labelEn: "Profile"
     },
     { 

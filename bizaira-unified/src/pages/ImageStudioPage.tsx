@@ -67,9 +67,9 @@ const ImageStudioPage = () => {
   const [description, setDescription] = useState("");
   const [sidebarTab, setSidebarTab] = useState<"type" | "style" | "details">("type");
 
-  const { creationsCount: usageCount } = getActivityStats();
-  const isLocked = usageCount >= 5;
-  const remaining = Math.max(0, 5 - usageCount);
+  const { totalActions, remainingActions } = getActivityStats();
+  const isLocked = totalActions >= 5;
+  const remaining = remainingActions;
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -93,6 +93,8 @@ const ImageStudioPage = () => {
         ratio,
         description,
         editImage: uploadedImage || undefined,
+        quality: "premium",
+        outputResolution: "8K",
       });
 
       if (imageUrls.length === 0) throw new Error("Generation failed");
@@ -142,7 +144,7 @@ const ImageStudioPage = () => {
               <div className="flex items-center gap-2">
                 <Sparkles size={16} className="text-luxury-navy" />
                 <span className="luxury-body-small text-luxury-gray-600">
-                  {remaining} {isHe ? "תמונות נותרו" : "images left"}
+                  {remaining} {isHe ? "פעולות נותרו" : "actions left"}
                 </span>
               </div>
             </div>
@@ -158,7 +160,7 @@ const ImageStudioPage = () => {
               <Lock size={28} className="text-red-500" />
             </div>
             <h2 className="text-lg font-bold text-foreground">{isHe ? "הגעת למגבלה החודשית" : "Monthly Limit Reached"}</h2>
-            <p className="text-sm text-muted-foreground">{isHe ? "השתמשת ב-5 פעולות החודש. הכ��י ייפתח מחדש בחודש הבא." : "You've used 5 actions this month. The tool will unlock next month."}</p>
+            <p className="text-sm text-muted-foreground">{isHe ? "השתמשת ב-5 פעולות החודש. הסטודיו ייפתח מחדש בתחילת החודש הבא." : "You've used 5 actions this month. The studio will unlock at the start of next month."}</p>
             <Link to="/pricing" className="inline-block gradient-glow text-primary-foreground font-bold px-6 py-3 rounded-xl hover:scale-[1.02] transition-all">
               {isHe ? "שדרג ל-PRO" : "Upgrade to PRO"}
             </Link>

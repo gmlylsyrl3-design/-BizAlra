@@ -67,25 +67,26 @@ const VideoStudioPage = () => {
     const content = answers.content || "";
     const duration = answers.duration || "30";
 
-    // Generate scene images for the video storyboard
     const numScenes = duration === "15" ? 3 : duration === "30" ? 4 : duration === "45" ? 5 : 6;
+    const shortDuration = duration === "15" ? (isHe ? "15 שניות" : "15 seconds") : duration === "30" ? (isHe ? "30 שניות" : "30 seconds") : duration === "45" ? (isHe ? "45 שניות" : "45 seconds") : (isHe ? "60 שניות" : "60 seconds");
 
-    // First generate a script
-    const scriptPrompt = lang === "he"
-      ? `צור תסריט קצר ל-${numScenes} סצנות של סרטון ${style} עבור "${businessName}". ${content ? `תוכן: ${content}` : ""} כתוב כותרת קצרה לכל סצנה.`
-      : `Create a short script for ${numScenes} scenes of a ${style} video for "${businessName}". ${content ? `Content: ${content}` : ""} Write a short title for each scene.`;
+    const scriptPrompt = isHe
+      ? `כתוב תסריט ויזואלי ל-${numScenes} סצנות של סרטון ${style} באורך ${shortDuration} עבור העסק "${businessName}". ${content ? `התוכן צריך לכלול: ${content}.` : ""} צור כותרת קצרה לכל סצנה ותיאור קונקרטי של המראה והאווירה.`
+      : `Write a visual script for ${numScenes} scenes of a ${style} video lasting ${shortDuration} for the business "${businessName}". ${content ? `The content should include: ${content}.` : ""} Create a short title for each scene and a concrete description of the look and atmosphere.`;
 
-    // Generate scene images in parallel
-    const scenePromises = [];
-    for (let i = 0; i < Math.min(numScenes, 4); i++) {
-      const sceneDescriptions = [
-        `Opening scene: Professional ${style} video frame for "${businessName}". Modern, clean, vertical 9:16 format. Stylish typography with business name. Dark elegant background with subtle glow effects.`,
-        `Middle scene: ${style} video frame showing the service/product of "${businessName}". ${content || "Professional and premium look"}. Vertical 9:16 format, cinematic lighting.`,
-        `Highlight scene: Key benefit showcase for "${businessName}". ${style} style. Professional visual with elegant text overlay. Vertical format.`,
-        `Closing scene: Call to action frame for "${businessName}". Contact information layout. ${style} style. Professional ending with logo placement. Vertical 9:16 format.`,
-      ];
-      scenePromises.push(generateImage(sceneDescriptions[i] || sceneDescriptions[0]));
-    }
+    const scriptText = await generateText(scriptPrompt, isHe
+      ? "אתה במאי יצירתי ללקוחות פרימיום. תן תסריט יוקרתי, ברור וממוקד, שמתאים לשוק העסקי הישראלי."
+      : "You are a premium creative director. Provide a luxurious, clear, and business-focused video script for modern entrepreneurs."
+    );
+
+    const sceneDescriptions = [
+      `Opening scene: ${businessName} introduction in a premium ${style} style. Use cinematic lighting, refined composition, and a polished vertical 9:16 layout. ${content ? `Include the message: ${content}.` : ""} ${scriptText}`,
+      `Middle scene: Showcase the core offer of ${businessName} in an elegant promotional frame. Vertical 9:16, premium branding, soft shadows, and crisp detail. ${content ? `Reference: ${content}.` : ""}`,
+      `Highlight scene: A strong benefit-focused moment for ${businessName}, with bold typography and sophisticated color contrast. Professional luxury aesthetic, vertical format.`,
+      `Closing scene: Call to action and brand signature for ${businessName}. Elegant layout with space for contact or logo. Cinematic finish and premium visual polish.`,
+    ];
+
+    const scenePromises = sceneDescriptions.slice(0, Math.min(numScenes, sceneDescriptions.length)).map(desc => generateImage(`${desc} Render in ultra-high resolution, contemporary premium style, 8K quality, polished finish.`));
 
     const results = await Promise.allSettled(scenePromises);
     const images = results

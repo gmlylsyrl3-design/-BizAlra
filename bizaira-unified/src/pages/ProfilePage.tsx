@@ -16,46 +16,66 @@ import {
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/hooks/useAuth";
+import { getActivityStats } from "@/lib/activity-tracker";
 
 const ProfilePage = () => {
   const { lang } = useI18n();
   const isHe = lang === "he";
   const navigate = useNavigate();
   const { user, profile, signOut } = useAuth();
+  const {
+    creationsCount,
+    downloadsCount,
+    deletionsCount,
+    generalCount,
+    totalActions,
+    nextRenewalDate,
+    remainingActions,
+    limit,
+    isLocked,
+  } = getActivityStats();
 
   const fullName = profile?.full_name || user?.user_metadata?.full_name || (isHe ? "אורח" : "Guest");
-  const creditsUsed = profile?.credits_used ?? 0;
-  const creditsTotal = profile?.credits_total ?? 5;
-  const creditsPercentage = creditsTotal > 0 ? Math.min(100, Math.round((creditsUsed / creditsTotal) * 100)) : 0;
+  const planLabel = profile?.plan ?? (isHe ? "חינם" : "Free");
+  const usedLabel = `${totalActions}/${limit}`;
+  const usagePercent = Math.min(100, Math.round((totalActions / limit) * 100));
+  const renewalLabel = nextRenewalDate
+    ? new Date(nextRenewalDate).toLocaleDateString(isHe ? "he-IL" : "en-US", {
+        day: "numeric",
+        month: "short",
+      })
+    : isHe
+    ? "טרם נעשה שימוש"
+    : "No usage yet";
 
   const cards = [
     {
-      title: isHe ? "אתחלו ליצור" : "Start Creating",
-      description: isHe ? "צרו תוכן שיווקי, תמונות ופוסטים בלחיצה אחת" : "Create marketing content, images, and posts in one click",
+      title: isHe ? "סטודיו" : "Studio",
+      description: isHe ? "גשו לכלי היצירה ולסטודיו החכם" : "Access the creation tools and smart studio",
       icon: Sparkles,
       href: "/create",
     },
     {
       title: isHe ? "אזור אישי" : "Personal Area",
-      description: isHe ? "נהלו את הפרופיל, ההעדפות וההגדרות שלכם" : "Manage your profile, preferences and settings",
+      description: isHe ? "המשך לנהל את ההגדרות והסטטוס שלך" : "Continue managing your settings and status",
       icon: User,
       href: "/profile",
     },
     {
-      title: isHe ? "מעקב פעילות" : "Activity Tracker",
-      description: isHe ? "צפו בסטטיסטיקות וביצועים בזמן אמת" : "View your performance and activity in real time",
+      title: isHe ? "פעילות" : "Activity",
+      description: isHe ? "צפו בסטטיסטיקות השימוש שלכם" : "See your usage statistics",
       icon: BarChart3,
       href: "/dashboard",
     },
     {
       title: isHe ? "ניהול מנוי" : "Subscription",
-      description: isHe ? "בדקו את התוכנית שלכם ואת מצב התשלומים" : "Review your plan and payments",
+      description: isHe ? "בדקו את התכנית והצעות השדרוג" : "Review your plan and upgrade options",
       icon: CreditCard,
       href: "/pricing",
     },
     {
       title: isHe ? "תמיכה" : "Support",
-      description: isHe ? "קבלו עזרה מהירה ותשובות מקצועיות" : "Get fast help and professional answers",
+      description: isHe ? "קבלו מענה מקצועי וזריז" : "Get fast professional support",
       icon: HelpCircle,
       href: "/support",
     },
@@ -67,260 +87,168 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] text-[#111827]" dir={isHe ? "rtl" : "ltr"}>
-      <div className="max-w-7xl mx-auto px-6 py-20">
-        <section className="text-center mb-14">
-          <h1 className="text-4xl md:text-5xl font-semibold mb-4" style={{ fontFamily: "Assistant, sans-serif" }}>
-            {isHe ? `שלום ${fullName}, מה תרצי לבנות היום?` : `Hello ${fullName}, what would you like to build today?`}
-          </h1>
-          <p className="mx-auto max-w-2xl text-base md:text-lg text-[#6B7280] leading-8" style={{ fontFamily: "Heebo, sans-serif" }}>
-            {isHe
-              ? "מרחב אישי מודרני לניהול העסק שלך הכולל סטטוס תכנית, שימוש בקרדיטים וכלים מתקדמים בעיצוב נקי ופרופסיונלי."
-              : "A modern personal dashboard for managing your business with plan status, credit usage, and advanced tools in a clean professional layout."}
-          </p>
-        </section>
-
-        <div className="grid gap-6 xl:grid-cols-[1.4fr_0.95fr] mb-14">
-          <article className="rounded-[20px] bg-white border border-[#E5E7EB] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] p-8">
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-8">
-              <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-[#6B7280] mb-3" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
-                  {isHe ? "סטטוס תוכנית" : "Plan Status"}
-                </p>
-                <h2 className="text-3xl font-semibold text-[#111827]" style={{ fontFamily: "Assistant, sans-serif" }}>
-                  {isHe ? "Free Plan" : "Free Plan"}
-                </h2>
+    <div className="min-h-screen bg-[#F4F0E6] text-[#0B1E3B]" dir={isHe ? "rtl" : "ltr"}>
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        <header className="rounded-[32px] border border-white/70 bg-white/90 p-10 shadow-[0_30px_80px_-40px_rgba(9,17,34,0.45)] backdrop-blur-xl">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl">
+              <p className="text-xs uppercase tracking-[0.3em] text-[#4B5163] mb-3" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
+                {isHe ? "אזור אישי" : "Personal Area"}
+              </p>
+              <h1 className="text-4xl md:text-5xl font-semibold leading-tight" style={{ fontFamily: "Assistant, sans-serif" }}>
+                {isHe ? `ברוכה השבה, ${fullName}` : `Welcome back, ${fullName}`}
+              </h1>
+              <p className="mt-4 max-w-2xl text-base leading-8 text-[#4B5163]" style={{ fontFamily: "Heebo, sans-serif" }}>
+                {isHe
+                  ? "מרחב פרטי לניהול סטטוס התוכנית, פעילות היצירה והקרדיטים החודשיים שלך." 
+                  : "A refined personal area to manage your plan status, creation activity, and monthly credits."}
+              </p>
+            </div>
+            <div className="rounded-[28px] border border-[#E9E4DA] bg-[#F7F1E7] p-6 shadow-[0_18px_50px_-32px_rgba(14,24,56,0.18)]">
+              <p className="text-xs uppercase tracking-[0.3em] text-[#4B5163] mb-2" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
+                {isHe ? "תוכנית נוכחית" : "Current Plan"}
+              </p>
+              <p className="text-2xl font-semibold text-[#0B1E3B] mb-3" style={{ fontFamily: "Assistant, sans-serif" }}>
+                {planLabel}
+              </p>
+              <p className="text-sm text-[#4B5163] mb-4" style={{ fontFamily: "Heebo, sans-serif" }}>
+                {isHe ? "Free Plan כולל עד 5 פעולות חודשיות בחינם" : "Free Plan includes up to 5 monthly actions free"}
+              </p>
+              <div className="flex items-center gap-3 text-sm text-[#0B1E3B] font-medium" style={{ fontFamily: "Heebo, sans-serif" }}>
+                <Clock size={18} />
+                <span>{isHe ? "הקרדיטים יתחדש בתאריך" : "Your credits will refresh on"}</span>
+                <span className="font-semibold">{renewalLabel}</span>
               </div>
-              <div className="text-right">
-                <p className="text-sm text-[#6B7280] mb-1" style={{ fontFamily: "Heebo, sans-serif" }}>
-                  {isHe ? "קרדיטים" : "Credits"}
+            </div>
+          </div>
+        </header>
+
+        <section className="mt-10 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+          <article className="rounded-[32px] border border-[#E9E4DA] bg-[#FFFFFF] p-8 shadow-[0_24px_60px_-40px_rgba(9,17,34,0.18)]">
+            <div className="flex flex-col gap-4 mb-8">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-[#4B5163] mb-2" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
+                    {isHe ? "קרדיט חודשי" : "Monthly Credit"}
+                  </p>
+                  <h2 className="text-3xl font-semibold text-[#0B1E3B]" style={{ fontFamily: "Assistant, sans-serif" }}>
+                    {usedLabel}
+                  </h2>
+                </div>
+                <span className={`rounded-full px-4 py-2 text-sm font-semibold ${isLocked ? "bg-[#F8E9E1] text-[#9B2D14]" : "bg-[#E4F0FF] text-[#0B1E3B]"}`}>
+                  {isLocked ? (isHe ? "מנעל פעול" : "Studio locked") : isHe ? "עדיין פתוח" : "Studio active"}
+                </span>
+              </div>
+              <div className="relative h-4 overflow-hidden rounded-full bg-[#E9E4DA]">
+                <div className="absolute inset-y-0 left-0 rounded-full bg-[#0B1E3B] transition-all duration-500" style={{ width: `${usagePercent}%` }} />
+              </div>
+              <div className="flex items-center justify-between text-sm text-[#4B5163]" style={{ fontFamily: "Heebo, sans-serif" }}>
+                <span>{isHe ? "משתמש" : "Used"}</span>
+                <span>{isHe ? "מקסימום" : "Limit"}</span>
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="rounded-[24px] bg-[#F7F1E7] p-5 border border-[#E9E4DA]">
+                <p className="text-xs uppercase tracking-[0.3em] text-[#4B5163] mb-3" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
+                  {isHe ? "יצירות" : "Created"}
                 </p>
-                <p className="text-2xl font-semibold text-[#111827]" style={{ fontFamily: "Assistant, sans-serif" }}>
-                  {creditsUsed}/{creditsTotal}
+                <p className="text-3xl font-semibold text-[#0B1E3B]" style={{ fontFamily: "Assistant, sans-serif" }}>
+                  {creationsCount}
+                </p>
+              </div>
+              <div className="rounded-[24px] bg-[#F7F1E7] p-5 border border-[#E9E4DA]">
+                <p className="text-xs uppercase tracking-[0.3em] text-[#4B5163] mb-3" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
+                  {isHe ? "הורדות" : "Downloads"}
+                </p>
+                <p className="text-3xl font-semibold text-[#0B1E3B]" style={{ fontFamily: "Assistant, sans-serif" }}>
+                  {downloadsCount}
+                </p>
+              </div>
+              <div className="rounded-[24px] bg-[#F7F1E7] p-5 border border-[#E9E4DA]">
+                <p className="text-xs uppercase tracking-[0.3em] text-[#4B5163] mb-3" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
+                  {isHe ? "מחיקות" : "Deletions"}
+                </p>
+                <p className="text-3xl font-semibold text-[#0B1E3B]" style={{ fontFamily: "Assistant, sans-serif" }}>
+                  {deletionsCount}
+                </p>
+              </div>
+              <div className="rounded-[24px] bg-[#F7F1E7] p-5 border border-[#E9E4DA]">
+                <p className="text-xs uppercase tracking-[0.3em] text-[#4B5163] mb-3" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
+                  {isHe ? "פעילויות כלליות" : "General Actions"}
+                </p>
+                <p className="text-3xl font-semibold text-[#0B1E3B]" style={{ fontFamily: "Assistant, sans-serif" }}>
+                  {generalCount}
                 </p>
               </div>
             </div>
 
-            <div className="space-y-4">
-              <div className="overflow-hidden rounded-full bg-[#E5E7EB] h-2.5">
-                <div
-                  className="h-2.5 rounded-full bg-[#4338CA] transition-all duration-500"
-                  style={{ width: `${creditsPercentage}%` }}
-                />
+            <div className="mt-8 rounded-[28px] border border-[#E9E4DA] bg-[#F8F6F0] p-6">
+              <div className="flex items-center gap-3 text-sm text-[#4B5163]" style={{ fontFamily: "Heebo, sans-serif" }}>
+                <Clock size={18} />
+                <span>{isHe ? "הקרדיטים יתחדשו ב" : "Credits refresh on"}</span>
+                <strong className="text-[#0B1E3B]">{renewalLabel}</strong>
               </div>
-              <div className="flex items-center justify-between text-sm text-[#6B7280] font-medium" style={{ fontFamily: "Heebo, sans-serif" }}>
-                <span>{isHe ? "נוצל" : "Used"}</span>
-                <span>{isHe ? "זמין" : "Available"}</span>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-[16px] border border-[#E5E7EB] bg-[#FAFAFB] p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-[#6B7280] mb-2" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
-                    {isHe ? "שימוש" : "Usage"}
-                  </p>
-                  <p className="text-lg font-semibold text-[#111827]" style={{ fontFamily: "Heebo, sans-serif" }}>
-                    {creditsPercentage}%
-                  </p>
-                </div>
-                <div className="rounded-[16px] border border-[#E5E7EB] bg-[#FAFAFB] p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-[#6B7280] mb-2" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
-                    {isHe ? "תוכנית" : "Plan"}
-                  </p>
-                  <p className="text-lg font-semibold text-[#111827]" style={{ fontFamily: "Heebo, sans-serif" }}>
-                    {profile?.plan ?? (isHe ? "חינם" : "Free")}
-                  </p>
-                </div>
-              </div>
+              <p className="mt-3 text-sm leading-7 text-[#475569]" style={{ fontFamily: "Heebo, sans-serif" }}>
+                {isHe
+                  ? "הסטודיו נחסם עם חמש פעולות, אבל המשתמש יכול לשדרג בכל עת כדי לשמור על המשכיות עבודה." 
+                  : "The studio locks after five actions, but you can upgrade anytime to keep creating without interruption."}
+              </p>
             </div>
           </article>
 
-          <article className="rounded-[20px] bg-white border border-[#E5E7EB] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] p-8">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="rounded-2xl border border-[#E5E7EB] bg-[#F9FAFB] p-3">
-                <Crown size={24} className="text-[#4338CA]" strokeWidth={2} />
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-[#6B7280] mb-2" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
-                  {isHe ? "שדרוג ל-PRO" : "Upgrade to PRO"}
-                </p>
-                <h3 className="text-2xl font-semibold text-[#111827]" style={{ fontFamily: "Assistant, sans-serif" }}>
-                  {isHe ? "פתיחת אפשרויות מתקדמות" : "Unlock advanced capabilities"}
-                </h3>
-              </div>
-            </div>
-
-            <p className="text-sm leading-7 text-[#6B7280] mb-6" style={{ fontFamily: "Heebo, sans-serif" }}>
-              {isHe
-                ? "קבלו קרדיטים ללא הגבלה, ניתוחים חכמים ותמיכה מועדפת בצורה מקצועית ועדכנית."
-                : "Get unlimited credits, smarter insights, and priority support in a polished, modern experience."}
-            </p>
-
-            <div className="grid gap-3 mb-6">
-              <div className="flex items-center gap-3 rounded-[16px] border border-[#E5E7EB] bg-[#FAFAFB] p-4">
-                <Zap className="text-[#4338CA]" size={18} strokeWidth={2} />
-                <span className="text-sm text-[#111827]" style={{ fontFamily: "Heebo, sans-serif" }}>
-                  {isHe ? "קרדיטים ללא הגבלה" : "Unlimited credits"}
-                </span>
-              </div>
-              <div className="flex items-center gap-3 rounded-[16px] border border-[#E5E7EB] bg-[#FAFAFB] p-4">
-                <TrendingUp className="text-[#4338CA]" size={18} strokeWidth={2} />
-                <span className="text-sm text-[#111827]" style={{ fontFamily: "Heebo, sans-serif" }}>
-                  {isHe ? "כלים עסקיים מתקדמים" : "Advanced business tools"}
-                </span>
-              </div>
-              <div className="flex items-center gap-3 rounded-[16px] border border-[#E5E7EB] bg-[#FAFAFB] p-4">
-                <Shield className="text-[#4338CA]" size={18} strokeWidth={2} />
-                <span className="text-sm text-[#111827]" style={{ fontFamily: "Heebo, sans-serif" }}>
-                  {isHe ? "תמיכה מועדפת" : "Priority support"}
-                </span>
-              </div>
-            </div>
-
-            <Link
-              to="/pricing"
-              className="inline-flex items-center justify-center rounded-[16px] bg-[#4338CA] px-6 py-3 text-sm font-semibold text-white hover:bg-[#3730A3] transition-colors duration-300"
-              style={{ fontFamily: "Assistant, sans-serif" }}
-            >
-              {isHe ? "שדרג עכשיו" : "Upgrade now"}
-            </Link>
-          </article>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 mb-14">
-          {cards.map((card) => {
-            const IconComponent = card.icon;
-            return (
+          <aside className="space-y-6">
+            <div className="rounded-[32px] border border-[#E9E4DA] bg-[#0B1E3B] p-8 text-white shadow-[0_24px_80px_-40px_rgba(9,17,34,0.45)]">
+              <p className="text-xs uppercase tracking-[0.3em] text-[#A9C7F1] mb-3" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
+                {isHe ? "שדרוג" : "Upgrade"}
+              </p>
+              <h2 className="text-3xl font-semibold mb-4" style={{ fontFamily: "Assistant, sans-serif" }}>
+                {isHe ? "שדרגו ל-PRO" : "Upgrade to PRO"}
+              </h2>
+              <p className="text-sm leading-7 text-[#D9E7FF]" style={{ fontFamily: "Heebo, sans-serif" }}>
+                {isHe
+                  ? "השיגו שימוש ללא הגבלה בסטודיו, יכולות פרימיום וניהול חכם יותר של העסק שלכם." 
+                  : "Unlock unlimited studio use, premium capabilities, and smarter business management."}
+              </p>
               <Link
-                key={card.title}
-                to={card.href}
-                className="group rounded-[20px] bg-white border border-[#E5E7EB] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_15px_-10px_rgba(0,0,0,0.12)]"
+                to="/pricing"
+                className="mt-6 inline-flex w-full items-center justify-center rounded-[18px] bg-[#F8E4B9] px-6 py-3 text-sm font-semibold text-[#0B1E3B] shadow-sm transition hover:bg-[#F9E7C3]"
+                style={{ fontFamily: "Assistant, sans-serif" }}
               >
-                <div className="inline-flex items-center justify-center mx-auto mb-5 h-14 w-14 rounded-2xl bg-[#F3F4F6]">
-                  <IconComponent size={24} className="text-[#4B5563]" strokeWidth={2} />
-                </div>
-                <h3 className="text-xl font-semibold text-[#111827] mb-2" style={{ fontFamily: "Assistant, sans-serif" }}>
-                  {card.title}
-                </h3>
-                <p className="text-sm leading-7 text-[#6B7280] mx-auto max-w-[16rem]" style={{ fontFamily: "Heebo, sans-serif" }}>
-                  {card.description}
-                </p>
+                {isHe ? "שדרגו עכשיו" : "Upgrade now"}
               </Link>
-            );
-          })}
-        </div>
-
-        <div className="bg-white border border-[#E5E7EB] rounded-[20px] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] p-8">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-semibold text-[#111827] mb-3" style={{ fontFamily: "Assistant, sans-serif" }}>
-              {isHe ? "הפרופיל האישי שלך" : "Your Personal Profile"}
-            </h2>
-            <p className="mx-auto max-w-2xl text-sm md:text-base text-[#6B7280] leading-7" style={{ fontFamily: "Heebo, sans-serif" }}>
-              {isHe ? "כל המידע וההגדרות שלך במקום אחד נקי ומדויק." : "All your information and settings in one clean and precise place."}
-            </p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-10">
-            <div className="rounded-[16px] border border-[#E5E7EB] bg-[#FAFAFB] p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white border border-[#E5E7EB]">
-                  <User size={20} className="text-[#4B5563]" strokeWidth={2} />
-                </div>
-                <p className="text-xs uppercase tracking-[0.3em] text-[#6B7280]" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
-                  {isHe ? "שם מלא" : "Full Name"}
-                </p>
-              </div>
-              <p className="text-lg text-[#111827]" style={{ fontFamily: "Heebo, sans-serif" }}>
-                {fullName}
-              </p>
             </div>
 
-            <div className="rounded-[16px] border border-[#E5E7EB] bg-[#FAFAFB] p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white border border-[#E5E7EB]">
-                  <Mail size={20} className="text-[#4B5563]" strokeWidth={2} />
-                </div>
-                <p className="text-xs uppercase tracking-[0.3em] text-[#6B7280]" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
-                  {isHe ? "דואר אלקטרוני" : "Email"}
-                </p>
-              </div>
-              <p className="text-lg text-[#111827]" style={{ fontFamily: "Heebo, sans-serif" }}>
-                {profile?.email ?? user?.email ?? (isHe ? "לא זמין" : "Not available")}
+            <div className="rounded-[32px] border border-[#E9E4DA] bg-white p-8 shadow-[0_24px_80px_-40px_rgba(9,17,34,0.18)]">
+              <p className="text-xs uppercase tracking-[0.3em] text-[#4B5163] mb-3" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
+                {isHe ? "קיצורי דרך" : "Quick Actions"}
               </p>
-            </div>
-
-            <div className="rounded-[16px] border border-[#E5E7EB] bg-[#FAFAFB] p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white border border-[#E5E7EB]">
-                  <Briefcase size={20} className="text-[#4B5563]" strokeWidth={2} />
-                </div>
-                <p className="text-xs uppercase tracking-[0.3em] text-[#6B7280]" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
-                  {isHe ? "סוג עסק" : "Business Type"}
-                </p>
+              <div className="grid gap-3">
+                <Link
+                  to="/create"
+                  className="rounded-[18px] border border-[#E9E4DA] px-5 py-4 text-sm text-[#0B1E3B] transition hover:bg-[#F3ECE0]"
+                  style={{ fontFamily: "Heebo, sans-serif" }}
+                >
+                  {isHe ? "פתחי את הסטודיו" : "Open the studio"}
+                </Link>
+                <Link
+                  to="/dashboard"
+                  className="rounded-[18px] border border-[#E9E4DA] px-5 py-4 text-sm text-[#0B1E3B] transition hover:bg-[#F3ECE0]"
+                  style={{ fontFamily: "Heebo, sans-serif" }}
+                >
+                  {isHe ? "צפי בפעילות" : "View activity"}
+                </Link>
+                <Link
+                  to="/pricing"
+                  className="rounded-[18px] border border-[#E9E4DA] px-5 py-4 text-sm text-[#0B1E3B] transition hover:bg-[#F3ECE0]"
+                  style={{ fontFamily: "Heebo, sans-serif" }}
+                >
+                  {isHe ? "בדקי שדרוג" : "Check upgrade"}
+                </Link>
               </div>
-              <p className="text-lg text-[#111827]" style={{ fontFamily: "Heebo, sans-serif" }}>
-                {profile?.business_type ?? (isHe ? "לא צויין" : "Not specified")}
-              </p>
             </div>
-
-            <div className="rounded-[16px] border border-[#E5E7EB] bg-[#FAFAFB] p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white border border-[#E5E7EB]">
-                  <Target size={20} className="text-[#4B5563]" strokeWidth={2} />
-                </div>
-                <p className="text-xs uppercase tracking-[0.3em] text-[#6B7280]" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
-                  {isHe ? "קהל יעד" : "Target Audience"}
-                </p>
-              </div>
-              <p className="text-lg text-[#111827]" style={{ fontFamily: "Heebo, sans-serif" }}>
-                {profile?.target_audience ?? (isHe ? "לא צויין" : "Not specified")}
-              </p>
-            </div>
-
-            <div className="rounded-[16px] border border-[#E5E7EB] bg-[#FAFAFB] p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white border border-[#E5E7EB]">
-                  <CreditCard size={20} className="text-[#4B5563]" strokeWidth={2} />
-                </div>
-                <p className="text-xs uppercase tracking-[0.3em] text-[#6B7280]" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
-                  {isHe ? "תוכנית" : "Plan"}
-                </p>
-              </div>
-              <p className="text-lg text-[#111827]" style={{ fontFamily: "Heebo, sans-serif" }}>
-                {profile?.plan ?? (isHe ? "חינם" : "Free")}
-              </p>
-            </div>
-
-            <div className="rounded-[16px] border border-[#E5E7EB] bg-[#FAFAFB] p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white border border-[#E5E7EB]">
-                  <Clock size={20} className="text-[#4B5563]" strokeWidth={2} />
-                </div>
-                <p className="text-xs uppercase tracking-[0.3em] text-[#6B7280]" style={{ fontFamily: "Assistant, sans-serif", fontWeight: 700 }}>
-                  {isHe ? "קרדיטים" : "Credits"}
-                </p>
-              </div>
-              <p className="text-lg text-[#111827]" style={{ fontFamily: "Heebo, sans-serif" }}>
-                {creditsUsed}/{creditsTotal}
-              </p>
-            </div>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <button
-              onClick={handleSignOut}
-              className="rounded-[16px] border border-[#E5E7EB] bg-white px-6 py-4 text-[#111827] font-semibold hover:shadow-sm transition-shadow duration-300"
-              style={{ fontFamily: "Heebo, sans-serif" }}
-            >
-              {isHe ? "התנתק" : "Sign Out"}
-            </button>
-            <Link
-              to="/onboarding"
-              className="rounded-[16px] bg-[#4338CA] px-6 py-4 text-white font-semibold hover:bg-[#3730A3] transition-colors duration-300 flex items-center justify-center"
-              style={{ fontFamily: "Assistant, sans-serif" }}
-            >
-              {isHe ? "ערוך פרופיל" : "Edit Profile"}
-            </Link>
-          </div>
-        </div>
+          </aside>
+        </section>
       </div>
     </div>
   );

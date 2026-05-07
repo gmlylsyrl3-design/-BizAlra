@@ -10,8 +10,8 @@ interface Translations {
 const translations: Translations = {
   // Navigation
   "nav.home": { he: "בית", en: "Home" },
-  "nav.create": { he: "יצירה", en: "Create" },
-  "nav.dashboard": { he: "האזור שלי", en: "My Area" },
+  "nav.create": { he: "סטודיו", en: "Studio" },
+  "nav.dashboard": { he: "אזור אישי", en: "Personal Area" },
   "nav.support": { he: "תמיכה", en: "Support" },
   "nav.journal": { he: "יומן", en: "Journal" },
 

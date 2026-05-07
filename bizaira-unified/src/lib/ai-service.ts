@@ -47,6 +47,8 @@ export interface GenerateStudioImagePayload {
   ratio: string;
   description?: string;
   editImage?: string;
+  quality?: string;
+  outputResolution?: string;
 }
 
 export async function generateStudioImage(payload: GenerateStudioImagePayload): Promise<string[]> {
@@ -91,6 +93,8 @@ export interface GenerateMessagePayload {
   details: string;
   language?: string;
   modifier?: string;
+  quality?: string;
+  systemPrompt?: string;
 }
 
 export async function generateMessage(payload: GenerateMessagePayload): Promise<string> {
@@ -123,6 +127,8 @@ export interface GenerateAnalyticsPayload {
   wantToImprove?: string;
   question?: string;
   language?: string;
+  quality?: string;
+  systemPrompt?: string;
 }
 
 export async function generateAnalytics(payload: GenerateAnalyticsPayload): Promise<string> {

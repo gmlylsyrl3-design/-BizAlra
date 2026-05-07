@@ -5,6 +5,7 @@ import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/hooks/useAuth";
 import { getGuestSession } from "@/lib/guest-session";
 import { safeGetSessionItem } from "@/lib/safe-storage";
+import { getActivityStats } from "@/lib/activity-tracker";
 
 // Business-Luxury Color Palette (NO GOLD)
 const NAVY = "#0D2344";
@@ -21,6 +22,7 @@ const HomePage = () => {
   const guestSession = isGuest ? getGuestSession() : null;
 
   const userName = profile?.full_name || user?.user_metadata?.full_name || (isGuest ? (isHe ? "אורח" : "Guest") : (isHe ? "משתמש" : "User"));
+  const { creationsCount, downloadsCount, totalActions, remainingActions } = getActivityStats();
 
   // Feature cards matching specification exactly
   const features = [
@@ -191,7 +193,7 @@ const HomePage = () => {
       {/* Quick Stats Section */}
       <div className="max-w-5xl mx-auto mt-12 sm:mt-16">
         <div
-          className="grid grid-cols-3 gap-4 p-6 sm:p-8 rounded-2xl"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-6 sm:p-8 rounded-2xl"
           style={{ backgroundColor: OFF_WHITE }}
         >
           <div>
@@ -199,7 +201,7 @@ const HomePage = () => {
               className="text-3xl sm:text-4xl font-bold"
               style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}
             >
-              0
+              {creationsCount}
             </p>
             <p className="text-xs sm:text-sm mt-2" style={{ color: LIGHT_TEXT }}>
               {isHe ? "יצירות" : "Creations"}
@@ -210,10 +212,10 @@ const HomePage = () => {
               className="text-3xl sm:text-4xl font-bold"
               style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}
             >
-              0
+              {downloadsCount}
             </p>
             <p className="text-xs sm:text-sm mt-2" style={{ color: LIGHT_TEXT }}>
-              {isHe ? "שמורות" : "Saved"}
+              {isHe ? "הורדות" : "Downloads"}
             </p>
           </div>
           <div>
@@ -221,10 +223,21 @@ const HomePage = () => {
               className="text-3xl sm:text-4xl font-bold"
               style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}
             >
-              0
+              {remainingActions}
             </p>
             <p className="text-xs sm:text-sm mt-2" style={{ color: LIGHT_TEXT }}>
-              {isHe ? "קרדיטים" : "Credits"}
+              {isHe ? "קרדיטים נותרו" : "Credits left"}
+            </p>
+          </div>
+          <div>
+            <p
+              className="text-3xl sm:text-4xl font-bold"
+              style={{ color: NAVY, fontFamily: "'Montserrat', sans-serif" }}
+            >
+              {totalActions}
+            </p>
+            <p className="text-xs sm:text-sm mt-2" style={{ color: LIGHT_TEXT }}>
+              {isHe ? "סך כל הפעולות" : "Total actions"}
             </p>
           </div>
         </div>

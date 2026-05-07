@@ -1,4 +1,8 @@
-import { trackCreation as trackCreationMetric, trackDownload as trackDownloadMetric } from "@/lib/activity-tracker";
+import {
+  trackCreation as trackCreationMetric,
+  trackDownload as trackDownloadMetric,
+  trackDeletion as trackDeletionMetric,
+} from "@/lib/activity-tracker";
 import { safeGetItem, safeSetItem } from "@/lib/safe-storage";
 
 export type CreationType = "message" | "analytics" | "pricing" | "time" | "image" | "photo";
@@ -48,6 +52,7 @@ export function saveCreation(creation: Omit<Creation, "id" | "createdAt" | "upda
 export function deleteCreation(id: string): void {
   const existing = loadCreations();
   safeSetItem(STORAGE_KEY, JSON.stringify(existing.filter(c => c.id !== id)));
+  trackDeletionMetric();
 }
 
 export function getCreationsByType(type: CreationType): Creation[] {

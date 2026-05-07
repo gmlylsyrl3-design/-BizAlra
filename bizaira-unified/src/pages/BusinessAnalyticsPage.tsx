@@ -72,6 +72,10 @@ const BusinessAnalyticsPage = () => {
         wantToImprove,
         question: "",
         language: isHe ? "hebrew" : "english",
+        quality: "executive",
+        systemPrompt: isHe
+          ? "נתח את העסק באופן מקצועי ויוקרתי. הצג תובנות ניהוליות, אסטרטגיות צמיחה והמלצות ברורות לשיפור הרווחיות והיעילות."
+          : "Analyze the business with an executive-level perspective. Provide strategic insights, growth recommendations, and clear guidance for improving profitability and efficiency.",
       });
       setAnalysisResult(answer);
       saveEntry({ revenue, profit, clients, profitMargin });
@@ -109,6 +113,10 @@ const BusinessAnalyticsPage = () => {
         wantToImprove,
         question,
         language: isHe ? "hebrew" : "english",
+        quality: "executive",
+        systemPrompt: isHe
+          ? "ענה על השאלה באופן אסטרטגי, ממוקד ופרקטי. התמקד בתובנות לניהול עסק בטוח, צמיחה רווחית ושיפורים תפעוליים."
+          : "Answer the question with strategic, practical guidance. Focus on confident business decisions, profitable growth, and operational improvements.",
       });
       setAiAnswer(answer);
       if (answer && !answer.startsWith("לא הצלחתי")) {

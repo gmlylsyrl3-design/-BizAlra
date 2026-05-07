@@ -61,8 +61,12 @@ const AIMessagesPage = () => {
       tone: toneLabels[tone] || (isHe ? "מקצועי" : "professional"),
       audience,
       details,
-      language: "english",
+      language: isHe ? "hebrew" : "english",
       modifier: modifier || "",
+      quality: "premium",
+      systemPrompt: isHe
+        ? "כתוב הודעה עסקית יוקרתית, מקצועית וממוקדת לקהל הישראלי. השתמש בשפה עשירה ובמסר ברור עם קריאה לפעולה ממוקדת."
+        : "Write a premium business message in polished professional language. Use a clear value proposition, emotional appeal, and a strong call to action tailored for a modern audience.",
     };
   };
 

@@ -124,16 +124,16 @@ const ProductPhotoStudioPage = () => {
 
       if (productType === "logo") {
         const idea = LOGO_IDEAS[selectedLogoIdea]?.en || "modern logo";
-        prompt = `Create a ${idea}. Style: ${styleLabel}. Background: ${bgDesc}. Professional, clean, high resolution. Perfect for business branding.`;
+        prompt = `Create a ${idea}. Style: ${styleLabel}. Background: ${bgDesc}. Ultra-premium, high-resolution, refined visual identity for executive branding.`;
       } else if (productType === "profile") {
         const pose = PROFILE_POSES[selectedPose]?.en || "professional headshot";
         let extras = "";
         if (bodyType) extras += ` Body type: ${bodyType}.`;
         if (clothingStyle) extras += ` Clothing: ${clothingStyle}.`;
         if (headCovering) extras += ` Include head covering.`;
-        prompt = `Professional business profile photo. Pose: ${pose}. Style: ${styleLabel}. Background: ${bgDesc}.${extras} High-end quality, realistic, professional look.`;
+        prompt = `Professional luxury business profile photo. Pose: ${pose}. Style: ${styleLabel}. Background: ${bgDesc}.${extras} Cinematic lighting, high-detail realism, polished corporate portrait.`;
       } else if (productType === "story") {
-        prompt = `Professional Instagram/Facebook story image. Style: ${styleLabel}. Background: ${bgDesc}. Vertical format 9:16 aspect ratio, eye-catching, social media ready, modern design.`;
+        prompt = `Premium Instagram/Facebook story image. Style: ${styleLabel}. Background: ${bgDesc}. Vertical 9:16, eye-catching editorial design, elegant typography, brand-ready social media aesthetic.`;
       } else {
         // Build professional prompt from form data
         let productDetails = "";
@@ -142,7 +142,7 @@ const ProductPhotoStudioPage = () => {
         if (textOverlay.price) productDetails += `, priced at ${textOverlay.price}`;
         if (textOverlay.badge) productDetails += `, ${textOverlay.badge}`;
 
-        prompt = `Professional luxury product photography of ${productDetails || "luxury product"}, high-end lighting, navy and gold aesthetic, studio quality, elegant composition, premium branding.`;
+        prompt = `Professional luxury product photography of ${productDetails || "a premium product"}, ultra-high resolution, high-end lighting, polished studio quality, elegant composition, and elevated branding.`;
       }
 
       // Add text overlay instructions with exact text preservation
