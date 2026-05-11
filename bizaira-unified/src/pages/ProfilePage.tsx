@@ -1,222 +1,244 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  Volume2,
-  Video,
-  Image,
-  Type,
-  Plus,
-  Download,
-  Trash2,
-  Calendar,
-  RefreshCw,
-} from "lucide-react";
+import { Plus, Download, Trash2, Calendar, RefreshCw } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/hooks/useAuth";
 import { getActivityStats } from "@/lib/activity-tracker";
 
-const DEEP_MIDNIGHT_BLUE = "#001830";
-const CLEAN_WHITE = "#FFFFFF";
-const COOL_GRAY = "#6B7280";
-const SOFT_BORDER = "#E5E7EB";
-
-const tabs = [
-  { id: "text", labelHe: "טקסט", labelEn: "Text", icon: Type },
-  { id: "image", labelHe: "תמונה", labelEn: "Image", icon: Image },
-  { id: "video", labelHe: "וידאו", labelEn: "Video", icon: Video },
-  { id: "audio", labelHe: "אודיו", labelEn: "Audio", icon: Volume2 },
-];
-
-const cards = [
-  { id: "creations", labelHe: "יצירות", labelEn: "Creations", icon: Plus },
-  { id: "downloads", labelHe: "הורדות", labelEn: "Downloads", icon: Download },
-  { id: "deletions", labelHe: "מחיקות", labelEn: "Deletions", icon: Trash2 },
-];
+const MIDNIGHT_BLUE = "#001830";
+const WHITE = "#FFFFFF";
+const SOFT_GRAY = "#757575";
+const LIGHT_BORDER = "#E5E7EB";
 
 const ProfilePage = () => {
   const { lang } = useI18n();
   const isHe = lang === "he";
-  const { profile, user } = useAuth();
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<string>(tabs[0].id);
-  const [stats, setStats] = useState(() => getActivityStats());
+  const { user, profile } = useAuth();
+  const [stats, setStats] = useState(getActivityStats());
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
+  // Real-time polling for activity updates
   useEffect(() => {
-    if (!user) {
-      // navigate("/");
-      // return;
-    }
-    setStats(getActivityStats());
-  }, [user, navigate]);
+    const pollStats = () => {
+      setStats(getActivityStats());
+      setRefreshTrigger(prev => prev + 1);
+    };
+
+    const interval = setInterval(pollStats, 300);
+    window.addEventListener("storage", pollStats);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("storage", pollStats);
+    };
+  }, []);
 
   const { creationsCount, downloadsCount, deletionsCount, totalActions, limit, nextRenewalDate, weeklyTotal, dailyTotal, firstUseDate } = stats;
-  const remainingCredits = limit - totalActions;
-  const remainingPercent = limit > 0 ? Math.min(100, Math.round((remainingCredits / limit) * 100)) : 0;
-  const progressStyle = {
-    width: `${remainingPercent}%`,
-    backgroundColor: DEEP_MIDNIGHT_BLUE,
-    marginInlineStart: isHe ? "auto" : undefined,
-  };
+  
+  // Dynamic Credits Calculation from Profile or LocalStorage
+  const creditsTotal = profile?.credits_total ?? limit;
+  const creditsUsed = profile?.credits_used ?? totalActions;
+  const remainingCredits = Math.max(0, creditsTotal - creditsUsed);
+  const progressPercent = creditsTotal > 0 ? Math.round((remainingCredits / creditsTotal) * 100) : 0;
 
-  const planLabel = profile?.plan ? `${profile.plan} Plan` : (isHe ? "Free Plan" : "Free Plan");
-  const firstUseLabel = firstUseDate
-    ? new Date(firstUseDate).toLocaleDateString(isHe ? "he-IL" : "en-US", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
-    : isHe ? "טרם נקבע" : "Not set";
-  const renewalLabel = nextRenewalDate
-    ? nextRenewalDate.toLocaleDateString(isHe ? "he-IL" : "en-US", {
-        day: "numeric",
-        month: "short",
-      })
-    : isHe ? "טרם נקבע" : "Not set";
+  // Dynamic Plan Label (with proper fallback)
+  const planLabel = profile?.plan && profile.plan !== "free" 
+    ? profile.plan.charAt(0).toUpperCase() + profile.plan.slice(1) + " Plan"
+    : (isHe ? "תוכנית חינם" : "Free Plan");
+
+  // Real First Use Date
+  const firstUseLabel = profile?.plan_started_at 
+    ? new Date(profile.plan_started_at).toLocaleDateString(isHe ? "he-IL" : "en-US", { day: "numeric", month: "short", year: "numeric" })
+    : firstUseDate
+    ? new Date(firstUseDate).toLocaleDateString(isHe ? "he-IL" : "en-US", { day: "numeric", month: "short", year: "numeric" })
+    : (isHe ? "היום" : "Today");
+
+  // Real Renewal Date
+  const renewalLabel = profile?.last_renewal_at
+    ? new Date(profile.last_renewal_at).toLocaleDateString(isHe ? "he-IL" : "en-US", { day: "numeric", month: "short" })
+    : nextRenewalDate
+    ? nextRenewalDate.toLocaleDateString(isHe ? "he-IL" : "en-US", { day: "numeric", month: "short" })
+    : (isHe ? "בעוד חודש" : "Next Month");
 
   return (
-    <div
-      className="min-h-screen pb-20"
-      style={{ backgroundColor: CLEAN_WHITE, color: DEEP_MIDNIGHT_BLUE }}
-      dir={isHe ? "rtl" : "ltr"}
-    >
-      {/* Top Section */}
-      <div className="px-6 py-6">
+    <div className="min-h-screen pb-24" style={{ backgroundColor: WHITE, color: MIDNIGHT_BLUE, fontFamily: "'Heebo', 'Assistant', sans-serif" }} dir={isHe ? "rtl" : "ltr"}>
+      {/* Header Section */}
+      <div className="px-6 py-8" style={{ borderBottom: `1px solid ${LIGHT_BORDER}` }}>
+        {/* Top Row: Upgrade Button | Plan & Credits */}
         <div className="flex items-center justify-between mb-6">
           <button
-            type="button"
-            onClick={() => navigate("/pricing")}
-            className="rounded-lg px-4 py-2 text-sm font-medium text-white"
-            style={{ backgroundColor: DEEP_MIDNIGHT_BLUE }}
+            className="px-4 py-2.5 rounded-lg text-sm font-semibold text-white transition-all active:scale-95 hover:opacity-90"
+            style={{ backgroundColor: MIDNIGHT_BLUE }}
           >
             {isHe ? "שדרג ל-PRO" : "Upgrade to PRO"}
           </button>
-          <div className="text-right">
-            <div className="text-sm font-medium" style={{ color: DEEP_MIDNIGHT_BLUE }}>
-              {isHe ? "קרדיטים" : "Credits"}
+
+          <div className={isHe ? "text-left" : "text-right"}>
+            <div className="text-xs tracking-wide" style={{ color: SOFT_GRAY, letterSpacing: "0.05em", fontSize: "11px" }}>
+              {isHe ? "תוכנית" : "PLAN"}
             </div>
-            <div className="text-sm font-medium" style={{ color: DEEP_MIDNIGHT_BLUE }}>
+            <div className="text-sm font-semibold mt-0.5" style={{ color: MIDNIGHT_BLUE }}>
               {planLabel}
             </div>
           </div>
         </div>
 
-        <div className="mb-6">
-          <p className="text-2xl font-bold mb-3" style={{ color: DEEP_MIDNIGHT_BLUE }}>
-            {remainingCredits} / {limit}
-          </p>
-          <div className="h-1 overflow-hidden rounded-full bg-white border border-gray-200">
-            <div className="h-full transition-all duration-500" style={progressStyle} />
+        {/* Credits Counter & Progress Bar */}
+        <div>
+          <div className="flex items-baseline gap-1.5 mb-2.5">
+            <span className="text-3xl font-bold" style={{ color: MIDNIGHT_BLUE }}>
+              {remainingCredits}
+            </span>
+            <span className="text-base" style={{ color: SOFT_GRAY }}>
+              / {creditsTotal}
+            </span>
+          </div>
+
+          {/* Ultra-thin elegant progress bar - 1.5px */}
+          <div className="overflow-hidden rounded-full" style={{ backgroundColor: LIGHT_BORDER, height: "1.5px" }}>
+            <div
+              className="h-full transition-all duration-500 ease-out"
+              style={{
+                width: `${progressPercent}%`,
+                backgroundColor: MIDNIGHT_BLUE,
+              }}
+            />
           </div>
         </div>
       </div>
 
-      {/* Middle Section */}
-      <div className="px-6 mb-8">
-        {/* Data Rows */}
-        <div className="grid grid-cols-2 gap-6 mb-8">
-          {/* Right Column */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2 rtl:space-x-reverse">
-              <Calendar size={16} style={{ color: COOL_GRAY }} />
-              <span className="text-sm" style={{ color: COOL_GRAY }}>
-                {isHe ? "שימוש ראשון" : "First Use"}
+      {/* Data Rows Section */}
+      <div className="px-6 py-8" style={{ borderBottom: `1px solid ${LIGHT_BORDER}` }}>
+        {/* Stats Grid - Compact */}
+        <div className="grid grid-cols-2 gap-x-6 gap-y-5">
+          {/* First Use */}
+          <div>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <Calendar size={14} style={{ color: SOFT_GRAY }} />
+              <span className="text-xs" style={{ color: SOFT_GRAY, letterSpacing: "0.02em" }}>
+                {isHe ? "שימוש ראשון" : "FIRST USE"}
               </span>
             </div>
-            <p className="text-lg font-medium" style={{ color: DEEP_MIDNIGHT_BLUE }}>
+            <p className="text-sm font-semibold" style={{ color: MIDNIGHT_BLUE }}>
               {firstUseLabel}
             </p>
+          </div>
 
-            <div className="flex items-center space-x-2 rtl:space-x-reverse">
-              <RefreshCw size={16} style={{ color: COOL_GRAY }} />
-              <span className="text-sm" style={{ color: COOL_GRAY }}>
-                {isHe ? "חידוש הבא" : "Next Renewal"}
+          {/* Renewal */}
+          <div>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <RefreshCw size={14} style={{ color: SOFT_GRAY }} />
+              <span className="text-xs" style={{ color: SOFT_GRAY, letterSpacing: "0.02em" }}>
+                {isHe ? "חידוש הבא" : "NEXT RENEWAL"}
               </span>
             </div>
-            <p className="text-lg font-medium" style={{ color: DEEP_MIDNIGHT_BLUE }}>
+            <p className="text-sm font-semibold" style={{ color: MIDNIGHT_BLUE }}>
               {renewalLabel}
             </p>
           </div>
 
-          {/* Left Column */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2 rtl:space-x-reverse">
-              <Calendar size={16} style={{ color: COOL_GRAY }} />
-              <span className="text-sm" style={{ color: COOL_GRAY }}>
-                {isHe ? "סכום פעולה שבועי" : "Weekly Action Total"}
+          {/* Weekly Total */}
+          <div>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <Calendar size={14} style={{ color: SOFT_GRAY }} />
+              <span className="text-xs" style={{ color: SOFT_GRAY, letterSpacing: "0.02em" }}>
+                {isHe ? "סכום שבועי" : "WEEKLY TOTAL"}
               </span>
             </div>
-            <p className="text-lg font-medium" style={{ color: DEEP_MIDNIGHT_BLUE }}>
+            <p className="text-sm font-semibold" style={{ color: MIDNIGHT_BLUE }}>
               {weeklyTotal}
             </p>
+          </div>
 
-            <div className="flex items-center space-x-2 rtl:space-x-reverse">
-              <Calendar size={16} style={{ color: COOL_GRAY }} />
-              <span className="text-sm" style={{ color: COOL_GRAY }}>
-                {isHe ? "סכום פעולה יומי" : "Daily Action Total"}
+          {/* Daily Total */}
+          <div>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <Calendar size={14} style={{ color: SOFT_GRAY }} />
+              <span className="text-xs" style={{ color: SOFT_GRAY, letterSpacing: "0.02em" }}>
+                {isHe ? "סכום יומי" : "DAILY TOTAL"}
               </span>
             </div>
-            <p className="text-lg font-medium" style={{ color: DEEP_MIDNIGHT_BLUE }}>
+            <p className="text-sm font-semibold" style={{ color: MIDNIGHT_BLUE }}>
               {dailyTotal}
             </p>
           </div>
         </div>
-
-        {/* Activity Grid */}
-        <div className="grid grid-cols-3 gap-4">
-          {cards.map((card) => {
-            const Icon = card.icon;
-            const value =
-              card.id === "creations"
-                ? creationsCount
-                : card.id === "downloads"
-                ? downloadsCount
-                : deletionsCount;
-
-            return (
-              <div
-                key={card.id}
-                className="aspect-square rounded-lg bg-white p-4 text-center border border-gray-200"
-              >
-                <div className="flex items-center justify-center h-full flex-col">
-                  <Icon size={24} style={{ color: DEEP_MIDNIGHT_BLUE }} className="mb-2" />
-                  <p className="text-xl font-bold" style={{ color: DEEP_MIDNIGHT_BLUE }}>
-                    {value ?? 0}
-                  </p>
-                  <p className="mt-1 text-xs" style={{ color: COOL_GRAY }}>
-                    {isHe ? card.labelHe : card.labelEn}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
       </div>
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#E5E7EB] bg-white">
-        <div className="mx-auto flex max-w-lg items-center justify-between px-4 py-3">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 rounded-lg px-3 py-2 text-center text-xs font-semibold transition-colors duration-200 ${
-                  isActive
-                    ? "bg-[#000810] text-white"
-                    : "text-[#000810]"
-                }`}
-                style={{ margin: "0 2px" }}
-              >
-                <Icon size={18} className="mb-1" />
-                <div>{isHe ? tab.labelHe : tab.labelEn}</div>
-              </button>
-            );
-          })}
+      {/* Activity Grid Section */}
+      <div className="px-6 py-8">
+        <div className="flex items-center justify-center gap-3 px-2">
+          {/* Creations Card */}
+          <div
+            className="flex flex-col items-center justify-center text-center transition-transform hover:scale-105"
+            style={{
+              width: "clamp(70px, 22vw, 95px)",
+              aspectRatio: "1",
+              backgroundColor: WHITE,
+              border: `1px solid ${LIGHT_BORDER}`,
+              borderRadius: "10px",
+              padding: "12px",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.05)"
+            }}
+          >
+            <Plus size={20} style={{ color: MIDNIGHT_BLUE }} className="mb-2" />
+            <p className="text-lg font-bold" style={{ color: MIDNIGHT_BLUE }}>
+              {creationsCount}
+            </p>
+            <p className="text-[10px] mt-1" style={{ color: SOFT_GRAY }}>
+              {isHe ? "יצירות" : "Creates"}
+            </p>
+          </div>
+
+          {/* Downloads Card */}
+          <div
+            className="flex flex-col items-center justify-center text-center transition-transform hover:scale-105"
+            style={{
+              width: "clamp(70px, 22vw, 95px)",
+              aspectRatio: "1",
+              backgroundColor: WHITE,
+              border: `1px solid ${LIGHT_BORDER}`,
+              borderRadius: "10px",
+              padding: "12px",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.05)"
+            }}
+          >
+            <Download size={20} style={{ color: MIDNIGHT_BLUE }} className="mb-2" />
+            <p className="text-lg font-bold" style={{ color: MIDNIGHT_BLUE }}>
+              {downloadsCount}
+            </p>
+            <p className="text-[10px] mt-1" style={{ color: SOFT_GRAY }}>
+              {isHe ? "הורדות" : "Downloads"}
+            </p>
+          </div>
+
+          {/* Deletions Card */}
+          <div
+            className="flex flex-col items-center justify-center text-center transition-transform hover:scale-105"
+            style={{
+              width: "clamp(70px, 22vw, 95px)",
+              aspectRatio: "1",
+              backgroundColor: WHITE,
+              border: `1px solid ${LIGHT_BORDER}`,
+              borderRadius: "10px",
+              padding: "12px",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.05)"
+            }}
+          >
+            <Trash2 size={20} style={{ color: MIDNIGHT_BLUE }} className="mb-2" />
+            <p className="text-lg font-bold" style={{ color: MIDNIGHT_BLUE }}>
+              {deletionsCount}
+            </p>
+            <p className="text-[10px] mt-1" style={{ color: SOFT_GRAY }}>
+              {isHe ? "מחיקות" : "Deletions"}
+            </p>
+          </div>
         </div>
-      </nav>
+      </div>
+    </div>
+  );
+};
+
+export default ProfilePage;
     </div>
   );
 };

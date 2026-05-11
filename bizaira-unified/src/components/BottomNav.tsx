@@ -47,27 +47,27 @@ const BottomNav = () => {
             className="flex-1"
           >
             {({ isActive }) => (
-              <div className="flex flex-col items-center justify-center gap-1 py-2 transition-all duration-200 rounded-lg"
+              <div className="flex flex-col items-center justify-center gap-1 px-3 py-2 transition-all duration-300 rounded-xl"
                    style={{
-                     backgroundColor: isActive ? ACTIVE : "transparent",
-                     padding: "8px",
+                     backgroundColor: isActive ? "#FEF7F0" : "transparent",
+                     padding: isActive ? "12px 8px" : "8px",
                    }}
               >
                 <item.icon
-                  size={24}
-                  strokeWidth={isActive ? 2 : 1.5}
+                  size={22}
+                  strokeWidth={1.5}
                   style={{
-                    color: isActive ? "#FFFFFF" : "#999999",
-                    transition: "color 200ms ease-in-out",
+                    color: isActive ? NAVY : "#D1D5DB",
+                    transition: "color 300ms ease-in-out",
                   }}
                 />
                 <span
-                  className="text-[11px] font-medium leading-none"
+                  className="text-[10px] font-medium leading-none"
                   style={{
-                    color: isActive ? "#FFFFFF" : "#999999",
-                    fontWeight: isActive ? 700 : 500,
-                    fontFamily: "'Montserrat', sans-serif",
-                    transition: "color 200ms ease-in-out, font-weight 200ms ease-in-out",
+                    color: isActive ? NAVY : "#D1D5DB",
+                    fontWeight: isActive ? 600 : 400,
+                    fontFamily: "'Heebo', 'Assistant', sans-serif",
+                    transition: "color 300ms ease-in-out, font-weight 300ms ease-in-out",
                   }}
                 >
                   {item.label}
