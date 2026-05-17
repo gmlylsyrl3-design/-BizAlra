@@ -2,8 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useI18n } from "@/lib/i18n";
 import {
-  Camera, MessageSquare, BarChart3,
-  ChevronLeft, ChevronRight,
+  Camera,
+  MessageSquare,
+  BarChart3,
+  Clock,
+  Calculator,
+  Calendar,
 } from "lucide-react";
 
 const PEARL_WHITE = "#F9FAFB";
@@ -16,7 +20,6 @@ const CreatePage = () => {
   const { t, lang } = useI18n();
   const isHe = lang === "he";
   const [selectedTool, setSelectedTool] = useState("message");
-  const Arrow = isHe ? ChevronLeft : ChevronRight;
 
   const tools = [
     {
@@ -39,6 +42,27 @@ const CreatePage = () => {
       titleKey: "tool.analytics.title",
       descKey: "tool.analytics.desc",
       route: "/create/analytics",
+    },
+    {
+      id: "time",
+      icon: Clock,
+      titleKey: "tool.time.title",
+      descKey: "tool.time.desc",
+      route: "/create/time",
+    },
+    {
+      id: "pricing",
+      icon: Calculator,
+      titleKey: "tool.pricing.title",
+      descKey: "tool.pricing.desc",
+      route: "/create/pricing",
+    },
+    {
+      id: "calendar",
+      icon: Calendar,
+      titleKey: "tool.calendar.title",
+      descKey: "tool.calendar.desc",
+      route: "/journal",
     },
   ];
 
