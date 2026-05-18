@@ -1,122 +1,177 @@
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { useI18n } from "@/lib/i18n";
-import { UserCircle2, Download, Ticket, Headphones, CreditCard, Settings } from "lucide-react";
-
-const MIDNIGHT_BLUE = "#001830";
-const PAGE_BACKGROUND = "#F5F5DC";
+import { getActivityStats } from "@/lib/activity-tracker";
+import { UserCircle2, Headphones, CreditCard, Settings, Lock } from "lucide-react";
 
 const ProfilePage = () => {
-  const { lang } = useI18n();
+  const { lang, t } = useI18n();
   const isHe = lang === "he";
+  const navigate = useNavigate();
+  const { profile } = useAuth();
+  const stats = getActivityStats();
+
+  const totalCredits = profile?.credits_total ?? stats.limit;
+  const usedCredits = profile?.credits_used ?? stats.totalActions;
+  const remainingCredits = Math.max(0, totalCredits - usedCredits);
+  const isPro = profile?.plan === "pro";
+  const isBlocked = !isPro && remainingCredits <= 0;
+
+  const resetDate = useMemo(() => {
+    if (profile?.last_renewal_at) {
+      const date = new Date(profile.last_renewal_at);
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+    return stats.nextRenewalDate;
+  }, [profile?.last_renewal_at, stats.nextRenewalDate]);
+
+  const formattedResetDate = resetDate
+    ? resetDate.toLocaleDateString(isHe ? "he-IL" : "en-US", { day: "2-digit", month: "2-digit", year: "numeric" })
+    : isHe
+    ? "תאריך לא זמין"
+    : "Date unavailable";
+
+  const planLabel = isPro ? "PRO" : isHe ? "תוכנית חינם" : "Free Plan";
+  const studioStatus = isPro
+    ? isHe
+      ? "גישה בלתי מוגבלת לסטודיו"
+      : "Unlimited studio access"
+    : isBlocked
+    ? isHe
+      ? "הסטודיו נעול עד חידוש הקרדיטים"
+      : "Studio blocked until credits renew"
+    : isHe
+    ? "גישה פעילה לסטודיו"
+    : "Studio access active";
+
+  const userName = profile?.full_name ?? profile?.email ?? (isHe ? "משתמש BizAIra" : "BizAIra User");
+  const creditPercent = isPro ? 100 : Math.round((remainingCredits / Math.max(totalCredits, 1)) * 100);
 
   return (
-    <div className="min-h-screen py-10" style={{ backgroundColor: PAGE_BACKGROUND, color: MIDNIGHT_BLUE, fontFamily: "'Heebo', 'Assistant', sans-serif" }} dir={isHe ? "rtl" : "ltr"}>
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <section className="rounded-[32px] bg-white p-6 sm:p-8 shadow-[0_24px_60px_-36px_rgba(0,24,48,0.18)]">
+    <div className="min-h-screen bg-[#FAF9F6] text-[#001830]" dir={isHe ? "rtl" : "ltr"}>
+      {isBlocked && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#001830]/15 px-4 py-6 backdrop-blur-sm">
+          <div className="absolute inset-0 bg-[#001830]/10" />
+          <div className="relative w-full max-w-3xl rounded-[28px] border border-slate-200 bg-white/95 p-8 shadow-[0_28px_80px_rgba(0,24,48,0.18)]">
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#001830] px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white">
+              <Lock size={16} />
+              {isHe ? "הסטודיו נעול" : "Studio blocked"}
+            </div>
+            <h2 className="mt-5 text-3xl font-semibold text-[#001830]">
+              {isHe
+                ? "ניצלת את כל הקרדיטים החודשיים"
+                : "You’ve used up your monthly credits"}
+            </h2>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
+              {isHe
+                ? "הגישה לסטודיו תחזור ברגע שהקרדיטים יתחדשו. שדרג ל-PRO כדי לקבל גישה ללא הגבלה היום."
+                : "Studio access returns when credits renew. Upgrade to PRO for unlimited access now."}
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-slate-600">
+                {isHe ? `מתחדש בתאריך: ${formattedResetDate}` : `Renews on: ${formattedResetDate}`}
+              </p>
+              <button
+                type="button"
+                onClick={() => navigate("/pricing")}
+                className="rounded-xl bg-[#001830] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#03172c]"
+              >
+                {isHe ? "שדרג עכשיו" : "Upgrade now"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+        <header className="mb-8">
+          <div className="max-w-4xl">
+            <h1
+              className="text-4xl sm:text-5xl font-semibold tracking-tight text-[#001830] text-right"
+              style={{ fontFamily: "Inter, system-ui, sans-serif", letterSpacing: "-0.03em" }}
+            >
+              {isHe ? "היי, מה תרצה לבנות היום?" : "Hey, what would you like to build today?"}
+            </h1>
+            <p className="mt-3 max-w-2xl text-base text-slate-600">
+              {isHe
+                ? "כל המידע החשוב שלך במקום אחד: חשבון, קרדיטים ותאריך חידוש."
+                : "Everything important is in one place: account, credits, and renewal date."}
+            </p>
+          </div>
+        </header>
+
+        <section className="rounded-[28px] border border-gray-100 bg-white p-8 shadow-sm">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex items-center gap-4 rounded-[28px] bg-[#ECE7D9] p-6 shadow-sm sm:p-8">
-              <div className="flex h-20 w-20 items-center justify-center rounded-[28px] bg-white shadow-[0_10px_30px_-18px_rgba(0,24,48,0.25)]">
-                <UserCircle2 size={36} style={{ color: MIDNIGHT_BLUE }} />
-              </div>
-              <div>
-                <p className="text-sm font-semibold" style={{ color: MIDNIGHT_BLUE }}>אזור אישי</p>
-                <p className="mt-2 text-sm text-[#4B5563] max-w-xs">כרטיס חשבון מודרני ועדכני ללא מרכיבים מיותרים.</p>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-3 rounded-[24px] border border-[rgba(0,24,48,0.08)] bg-[#FFFFFF] p-5 sm:flex-row sm:items-center sm:justify-between">
-                <span className="inline-flex items-center rounded-full border border-[#001830] bg-white px-3 py-1 text-sm font-semibold text-[#001830]">
-                  Free Plan
-                </span>
-                <button className="inline-flex items-center justify-center rounded-3xl bg-[#001830] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#0d294d]">
-                  שדרוג ל-PRO
-                </button>
-              </div>
-
-              <div className="rounded-[24px] border border-[rgba(0,24,48,0.08)] bg-[#FFFFFF] p-5">
-                <div className="flex flex-col gap-2">
-                  <p className="text-xl font-semibold" style={{ color: MIDNIGHT_BLUE }}>5 / 5 קרדיטים</p>
-                  <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-[#E5E7EB]">
-                    <div className="h-full rounded-full" style={{ width: "100%", backgroundColor: MIDNIGHT_BLUE }} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-2 rounded-[24px] border border-[rgba(0,24,48,0.08)] bg-[#FFFFFF] p-5 text-sm text-[#4B5563] sm:flex-row sm:justify-between">
-                <span>0% שימוש ראשון</span>
-                <span>0% חידוש הבא</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="mt-8 rounded-[32px] bg-white p-6 sm:p-8 shadow-[0_24px_60px_-36px_rgba(0,24,48,0.18)]">
-          <div className="mb-6">
-            <h2 className="text-2xl font-semibold" style={{ color: MIDNIGHT_BLUE }}>פעולות אחרונות</h2>
-            <p className="mt-2 text-sm text-[#4B5563]">הפעילות שלך החודש</p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="flex min-h-[220px] flex-col items-center justify-center gap-4 rounded-[24px] border border-[rgba(0,24,48,0.08)] bg-[#FBFBFB] p-6 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#E9EFF8] text-[#001830]">
+            <div className="flex items-center gap-5">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-gray-100 bg-gray-50 text-[#2D3748]">
                 <UserCircle2 size={30} />
               </div>
-              <p className="text-5xl font-semibold" style={{ color: MIDNIGHT_BLUE }}>0</p>
               <div>
-                <p className="text-base font-semibold" style={{ color: MIDNIGHT_BLUE }}>יצירות שבוצעו</p>
-                <p className="mt-1 text-sm text-[#6B7280]">באנר שיווקי</p>
+                <p className="text-xs uppercase tracking-[0.26em] text-slate-500">{planLabel}</p>
+                <h2 className="mt-2 text-2xl font-semibold text-[#001830]">{isHe ? `ברוכה השבה, ${userName}` : `Welcome back, ${userName}`}</h2>
+                <p className="mt-1 text-sm text-slate-600">{studioStatus}</p>
               </div>
             </div>
+            <div className="space-y-3 text-right">
+              <p className="text-sm font-semibold text-[#001830]">
+                {isHe ? `נשארים קרדיטים: ${remainingCredits} / ${totalCredits}` : `Credits remaining: ${remainingCredits} / ${totalCredits}`}
+              </p>
+              <p className="text-sm text-slate-500">{isHe ? `מתחדש בתאריך: ${formattedResetDate}` : `Renews on: ${formattedResetDate}`}</p>
+            </div>
+          </div>
 
-            <div className="flex min-h-[220px] flex-col items-center justify-center gap-4 rounded-[24px] border border-[rgba(0,24,48,0.08)] bg-[#FBFBFB] p-6 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#E9EFF8] text-[#001830]">
-                <Download size={30} />
-              </div>
-              <p className="text-5xl font-semibold" style={{ color: MIDNIGHT_BLUE }}>0</p>
-              <div>
-                <p className="text-base font-semibold" style={{ color: MIDNIGHT_BLUE }}>הורדות</p>
-                <p className="mt-1 text-sm text-[#6B7280]">באנר שיווקי</p>
-              </div>
+          <div className="mt-8">
+            <div className="mb-3 flex items-center justify-between gap-4 text-sm font-medium text-[#001830]">
+              <span>{isHe ? "סטטוס קרדיטים" : "Credit balance"}</span>
+              <span>{`${creditPercent}%`}</span>
             </div>
+            <div className="h-3 overflow-hidden rounded-full bg-slate-100">
+              <div className="h-full rounded-full bg-[#001830] transition-all duration-300" style={{ width: `${creditPercent}%` }} />
+            </div>
+          </div>
 
-            <div className="flex min-h-[220px] flex-col items-center justify-center gap-4 rounded-[24px] border border-[rgba(0,24,48,0.08)] bg-[#FBFBFB] p-6 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#E9EFF8] text-[#001830]">
-                <Ticket size={30} />
-              </div>
-              <p className="text-5xl font-semibold" style={{ color: MIDNIGHT_BLUE }}>0</p>
-              <div>
-                <p className="text-base font-semibold" style={{ color: MIDNIGHT_BLUE }}>יצירת קופון</p>
-                <p className="mt-1 text-sm text-[#6B7280]">באנר שיווקי</p>
-              </div>
-            </div>
+          <div className="mt-7 flex flex-wrap gap-3 text-sm text-slate-600">
+            <span>{isHe ? `יצירות: ${stats.creationsCount}` : `Creations: ${stats.creationsCount}`}</span>
+            <span className="inline-flex h-1 w-1 rounded-full bg-slate-300" />
+            <span>{isHe ? `הורדות: ${stats.downloadsCount}` : `Downloads: ${stats.downloadsCount}`}</span>
+            <span className="inline-flex h-1 w-1 rounded-full bg-slate-300" />
+            <span>{isHe ? `פעולות: ${stats.generalCount}` : `Actions: ${stats.generalCount}`}</span>
           </div>
         </section>
 
-        <section className="mt-8 rounded-[32px] bg-white p-6 sm:p-8 shadow-[0_24px_60px_-36px_rgba(0,24,48,0.18)]">
-          <div className="mb-6">
-            <h2 className="text-2xl font-semibold" style={{ color: MIDNIGHT_BLUE }}>פעולות מהירות</h2>
+        <section className="mt-8 rounded-[28px] border border-gray-100 bg-white p-6 shadow-sm">
+          <div className="mb-5 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.26em] text-slate-500">{isHe ? "כלי ניהול מהירים" : "Quick actions"}</p>
+              <h3 className="mt-2 text-xl font-semibold text-[#001830]">{isHe ? "ניהול חשבון וסטודיו" : "Account & studio controls"}</h3>
+            </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-3">
-            <button className="flex flex-col items-center justify-center gap-3 rounded-[24px] border border-[rgba(0,24,48,0.08)] bg-[#FBFBFB] p-6 text-center transition hover:bg-[#F3F6FA]">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E9EFF8] text-[#001830]">
-                <Headphones size={24} />
-              </div>
-              <span className="text-base font-semibold" style={{ color: MIDNIGHT_BLUE }}>תמיכה</span>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <button
+              type="button"
+              onClick={() => navigate("/support")}
+              className="group flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-4 text-sm font-medium text-[#2D3748] transition-all duration-300 hover:bg-[#001830] hover:text-white"
+            >
+              <span>{isHe ? "תמיכה" : "Support"}</span>
+              <Headphones size={20} className="text-[#2D3748] transition-colors duration-300 group-hover:text-white" />
             </button>
-
-            <button className="flex flex-col items-center justify-center gap-3 rounded-[24px] border border-[rgba(0,24,48,0.08)] bg-[#FBFBFB] p-6 text-center transition hover:bg-[#F3F6FA]">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E9EFF8] text-[#001830]">
-                <CreditCard size={24} />
-              </div>
-              <span className="text-base font-semibold" style={{ color: MIDNIGHT_BLUE }}>ניהול מנוי</span>
+            <button
+              type="button"
+              onClick={() => navigate("/pricing")}
+              className="group flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-4 text-sm font-medium text-[#2D3748] transition-all duration-300 hover:bg-[#001830] hover:text-white"
+            >
+              <span>{isHe ? "ניהול מנוי" : "Manage subscription"}</span>
+              <CreditCard size={20} className="text-[#2D3748] transition-colors duration-300 group-hover:text-white" />
             </button>
-
-            <button className="flex flex-col items-center justify-center gap-3 rounded-[24px] border border-[rgba(0,24,48,0.08)] bg-[#FBFBFB] p-6 text-center transition hover:bg-[#F3F6FA]">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E9EFF8] text-[#001830]">
-                <Settings size={24} />
-              </div>
-              <span className="text-base font-semibold" style={{ color: MIDNIGHT_BLUE }}>הגדרות חשבון</span>
+            <button
+              type="button"
+              onClick={() => navigate("/settings")}
+              className="group flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-4 text-sm font-medium text-[#2D3748] transition-all duration-300 hover:bg-[#001830] hover:text-white"
+            >
+              <span>{isHe ? "הגדרות" : "Settings"}</span>
+              <Settings size={20} className="text-[#2D3748] transition-colors duration-300 group-hover:text-white" />
             </button>
           </div>
         </section>

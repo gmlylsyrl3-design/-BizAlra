@@ -17,9 +17,15 @@ const Layout = ({ children }: LayoutProps) => {
   const { user, profile } = useAuth();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const { totalActions, limit } = getActivityStats();
+  const { totalActions, limit, nextRenewalDate } = getActivityStats();
   const isLocked = totalActions >= limit;
   const isStudioPath = location.pathname.startsWith("/create");
+  const renewalDateText = nextRenewalDate
+    ? nextRenewalDate.toLocaleDateString(lang === "he" ? "he-IL" : "en-US", { day: "2-digit", month: "2-digit", year: "numeric" })
+    : lang === "he"
+    ? "תאריך לא זמין"
+    : "Date unavailable";
+  const upgradeButtonLabel = lang === "he" ? "שדרג ל-PRO" : "Upgrade to PRO";
 
   const navItems = [
     { to: "/", icon: Home, label: t("nav.home") },
@@ -88,35 +94,32 @@ const Layout = ({ children }: LayoutProps) => {
       {/* Language toggle — floating top corner */}
       <main id="main-content" className="flex-1 pb-20">{children}</main>
       {isLocked && isStudioPath && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 p-6">
-          <div className="pointer-events-none absolute inset-0 bg-white/10 backdrop-blur-xl" />
-          <div className="relative w-full max-w-2xl rounded-[32px] border border-white/20 bg-white/80 p-8 shadow-[0_28px_80px_-32px_rgba(0,0,0,0.45)] backdrop-blur-xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#000810] mb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#001830]/20 p-6">
+          <div className="pointer-events-none absolute inset-0 bg-[#001830]/10 backdrop-blur-xl" />
+          <div className="relative w-full max-w-2xl rounded-[32px] border border-slate-200/80 bg-white/95 p-8 shadow-[0_32px_80px_rgba(0,24,48,0.18)] backdrop-blur-xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#001830] mb-3">
               {t("app.limit.title")}
             </p>
-            <h2 className="text-3xl font-extrabold text-[#000810] mb-4">
+            <h2 className="text-3xl font-extrabold text-[#001830] mb-4">
               {t("app.limit.subtitle")}
             </h2>
-            <p className="text-sm leading-7 text-[#334155] mb-6">
+            <p className="text-sm leading-7 text-slate-600 mb-6">
               {t("app.limit.desc")}
             </p>
-            <div className="rounded-[24px] border border-[#000810]/10 bg-[#F8F7F4] p-6">
-              <p className="text-sm text-[#475569] mb-4">
+            <div className="rounded-[24px] border border-slate-200/80 bg-[#F8F7F2] p-6">
+              <p className="text-sm text-slate-600 mb-4">
                 {t("app.limit.upgrade")}
               </p>
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="flex items-center gap-2 text-[#000810] text-sm font-medium">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-2 text-[#001830] text-sm font-medium">
                   <Clock size={18} />
-                  <span>{t("app.limit.renewal")}</span>
+                  <span>{renewalDateText}</span>
                 </div>
                 <button
                   onClick={() => window.location.assign("/pricing")}
-                  className="inline-flex items-center justify-center rounded-2xl px-6 py-3 text-sm font-semibold text-white transition"
-                  style={{ backgroundColor: "#000810" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#000a1a")}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#000810")}
+                  className="inline-flex items-center justify-center rounded-2xl bg-[#001830] px-6 py-3 text-sm font-semibold text-[#F5F5DC] transition hover:bg-[#03172c]"
                 >
-                  {t("app.limit.upgradeBtn")}
+                  {upgradeButtonLabel}
                 </button>
               </div>
             </div>

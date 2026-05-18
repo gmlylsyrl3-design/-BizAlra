@@ -16,6 +16,7 @@ const HomePage = () => {
   const navigate = useNavigate();
   const isHe = lang === "he";
   const [showCookiePopup, setShowCookiePopup] = useState(false);
+  const [selectedFeature, setSelectedFeature] = useState<number | null>(null);
 
   useEffect(() => {
     // Check if user just completed onboarding and hasn't seen cookie consent
@@ -78,8 +79,8 @@ const HomePage = () => {
       <div className="pt-12 pb-12 max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex-1">
           <h1
-            className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-3"
-            style={{ color: DEEP_MIDNIGHT_BLUE, fontFamily: "'Assistant', sans-serif", fontWeight: 700 }}
+            className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight mb-3 text-right"
+            style={{ color: DEEP_MIDNIGHT_BLUE, fontFamily: "Inter, system-ui, sans-serif", fontWeight: 700, letterSpacing: "-0.03em" }}
           >
             {isHe ? "היי, מה תרצה לבנות היום?" : "Hey, what would you like to build today?"}
           </h1>
@@ -87,7 +88,7 @@ const HomePage = () => {
         <button
           onClick={() => navigate("/auth")}
           className="px-6 sm:px-8 py-3 rounded-2xl font-semibold text-white text-sm sm:text-base hover:shadow-lg transition-all duration-300 active:scale-95 shrink-0"
-          style={{ backgroundColor: DEEP_MIDNIGHT_BLUE, fontFamily: "'Assistant', sans-serif" }}
+          style={{ backgroundColor: DEEP_MIDNIGHT_BLUE, fontFamily: "Inter, system-ui, sans-serif" }}
         >
           {isHe ? "התחברות / הרשמה" : "Login / Sign Up"}
         </button>
@@ -98,50 +99,51 @@ const HomePage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-4 md:gap-5">
           {features.map((feature) => {
             const IconComponent = feature.icon;
+            const isSelected = selectedFeature === feature.id;
+
             return (
               <button
                 key={feature.id}
-                onClick={() => navigate(feature.path)}
-                className="group relative overflow-hidden rounded-2xl p-4 sm:p-5 text-left transition-all duration-300 hover:shadow-lg active:scale-95 border border-gray-200 hover:border-transparent"
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  boxShadow: "0 4px 12px rgba(0, 21, 41, 0.1)",
+                type="button"
+                onClick={() => {
+                  setSelectedFeature(feature.id);
+                  navigate(feature.path);
                 }}
+                className={`group relative overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 p-5 text-left shadow-sm transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#001830] ${
+                  isSelected ? "bg-[#001830] text-white shadow-md border-transparent" : "hover:bg-[#001830] hover:text-white hover:shadow-md"
+                }`}
               >
-                {/* Hover effect */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"
-                  style={{ backgroundColor: DEEP_MIDNIGHT_BLUE }}
-                />
-
-                {/* Content */}
                 <div className="relative z-10">
-                  <div className="mb-3">
+                  <div
+                    className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl border transition-colors duration-300 ${
+                      isSelected
+                        ? "border-white bg-[#001830] text-white"
+                        : "border-gray-200 bg-white text-[#2D3748] group-hover:border-white group-hover:bg-[#001830] group-hover:text-white"
+                    }`}
+                  >
                     <IconComponent
                       size={24}
-                      strokeWidth={1.5}
-                      className="text-gray-600 group-hover:text-white transition-colors duration-300"
+                      className={`transition-colors duration-300 ${
+                        isSelected ? "text-white" : "text-[#2D3748] group-hover:text-white"
+                      }`}
                     />
                   </div>
                   <h3
-                    className="text-lg sm:text-xl font-bold mb-1 text-gray-900 group-hover:text-white transition-colors duration-300"
-                    style={{ fontFamily: "'Assistant', sans-serif" }}
+                    className={`text-lg font-semibold tracking-tight transition-colors duration-300 ${
+                      isSelected ? "text-white" : "text-[#2D3748] group-hover:text-white"
+                    }`}
+                    style={{ fontFamily: "Inter, system-ui, sans-serif" }}
                   >
                     {feature.title}
                   </h3>
                   <p
-                    className="text-xs sm:text-sm text-gray-600 group-hover:text-white transition-colors duration-300"
-                    style={{ opacity: 0.85 }}
+                    className={`mt-2 text-sm leading-6 transition-colors duration-300 ${
+                      isSelected ? "text-white/90" : "text-[#2D3748] group-hover:text-[#F5F5DC]"
+                    }`}
                   >
                     {feature.desc}
                   </p>
                 </div>
-
-                {/* Bottom accent line */}
-                <div
-                  className="absolute bottom-0 left-0 right-0 h-1 origin-left group-hover:scale-x-100 transform scale-x-0 transition-transform duration-300 rounded-bl-2xl rounded-br-2xl"
-                  style={{ backgroundColor: "rgba(255, 255, 255, 0.4)" }}
-                />
               </button>
             );
           })}
