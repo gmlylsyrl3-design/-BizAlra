@@ -61,7 +61,7 @@ const OnboardingWelcome = () => {
             <button
               type="button"
               onClick={() => handleSelect("en")}
-              className="flex h-40 flex-col items-center justify-center rounded-xl border text-lg font-semibold"
+              className="flex h-40 flex-col items-center justify-center rounded-xl border border-gray-200 bg-[#F8F9FA] text-lg font-semibold text-[#2D3748] transition-colors duration-200 ease-in-out focus:outline-none"
               style={{
                 backgroundColor: lang === "en" ? NAVY : OFFWHITE,
                 color: lang === "en" ? WHITE : DARK_TEXT,
@@ -74,7 +74,7 @@ const OnboardingWelcome = () => {
             <button
               type="button"
               onClick={() => handleSelect("he")}
-              className="flex h-40 flex-col items-center justify-center rounded-xl border text-lg font-semibold"
+              className="flex h-40 flex-col items-center justify-center rounded-xl border border-gray-200 bg-[#F8F9FA] text-lg font-semibold text-[#2D3748] transition-colors duration-200 ease-in-out focus:outline-none"
               style={{
                 backgroundColor: lang === "he" ? NAVY : OFFWHITE,
                 color: lang === "he" ? WHITE : DARK_TEXT,

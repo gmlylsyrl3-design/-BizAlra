@@ -112,7 +112,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-8 bg-slate-950/10" dir={direction}>
-      <div className="w-full max-w-4xl rounded-[32px] border border-slate-200/40 bg-white/95 p-10 shadow-[0_32px_80px_rgba(15,23,42,0.14)] backdrop-blur-md">
+        <div className="w-full max-w-4xl rounded-[32px] border border-slate-200/40 bg-white/95 p-8 shadow-[0_32px_80px_rgba(15,23,42,0.14)] backdrop-blur-md">
         {step === "greeting" && (
           <section className={cn("flex flex-col items-center justify-center gap-8", textAlignClass)}>
             <div className="max-w-2xl">
@@ -127,7 +127,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
             <button
               type="button"
               onClick={() => setStep("language")}
-              className="inline-flex items-center justify-center rounded-[18px] bg-[#001830] px-8 py-4 text-base font-semibold text-[#F5F5DC] shadow-[0_12px_30px_rgba(0,24,48,0.23)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:bg-[#03172c]"
+              className="inline-flex items-center justify-center rounded-[18px] bg-[#001830] px-8 py-4 text-base font-semibold text-white shadow-[0_12px_30px_rgba(0,24,48,0.23)] transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:bg-[#001830]"
             >
               {t("onboarding.greeting.button")}
               <ChevronRight size={18} className="ml-2" />
@@ -136,25 +136,27 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
         )}
 
         {step !== "greeting" && (
-          <div className="space-y-8">
-            <StepHeader
-              num={stepNumber}
-              total={4}
-              stepLabel={t("onboarding.stepCounter", { num: stepNumber, total: 4 })}
-              title={
-                step === "language"
-                  ? t("onboarding.language.title")
-                  : step === "business" || step === "business-info"
-                  ? t("onboarding.business.title")
-                  : step === "audience" || step === "audience-info"
-                  ? t("onboarding.audience.title")
-                  : t("onboarding.goal.title")
-              }
-              isHe={isHe}
-            />
+          <div className="space-y-6">
+            {(step !== "business-info" && step !== "audience-info") && (
+              <StepHeader
+                num={stepNumber}
+                total={4}
+                stepLabel={t("onboarding.stepCounter", { num: stepNumber, total: 4 })}
+                title={
+                  step === "language"
+                    ? t("onboarding.language.title")
+                    : step === "business"
+                    ? t("onboarding.business.title")
+                    : step === "audience"
+                    ? t("onboarding.audience.title")
+                    : t("onboarding.goal.title")
+                }
+                isHe={isHe}
+              />
+            )}
 
             {step === "language" && (
-              <div className="grid gap-6 sm:grid-cols-2">
+              <div className="grid gap-4 sm:grid-cols-2">
                 {languageOptions.map((option) => {
                   const selected = selectedLanguage?.value === option.value;
                   return (
@@ -163,10 +165,10 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
                       type="button"
                       onClick={() => handleLanguageSelect(option)}
                       className={cn(
-                        "group flex min-h-[140px] items-center justify-center rounded-[24px] border p-6 text-center text-[1.05rem] font-semibold transition-all duration-300 ease-in-out shadow-[0_16px_42px_rgba(15,23,42,0.08)]",
+                        "flex min-h-[96px] items-center justify-center rounded-xl border px-4 py-3 text-center text-lg font-semibold transition-colors duration-200 ease-in-out",
                         selected
-                          ? "border-transparent bg-[#001830] text-[#F5F5DC] shadow-[0_20px_60px_rgba(0,24,48,0.22)]"
-                          : "border-slate-200 bg-slate-50 text-slate-950 hover:border-transparent hover:bg-[#001830] hover:text-[#F5F5DC]"
+                          ? "border-transparent bg-[#001830] text-white"
+                          : "border-slate-200 bg-[#F8F9FA] text-slate-950"
                       )}
                     >
                       {t(option.labelKey)}
@@ -178,7 +180,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
 
             {step === "business" && (
               <div className="space-y-6">
-                <div className="grid gap-4 sm:grid-cols-3">
+                <div className="grid gap-3 sm:grid-cols-3">
                   {businessTypes.map(({ label, Icon }) => {
                     const selected = businessType === label;
                     return (
@@ -187,23 +189,23 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
                         type="button"
                         onClick={() => setBusinessType(label)}
                         className={cn(
-                          "group flex min-h-[150px] flex-col items-center justify-center gap-4 rounded-[24px] border p-6 text-center transition-all duration-300 ease-in-out shadow-[0_16px_32px_rgba(15,23,42,0.08)]",
+                          "flex min-h-[96px] items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm font-semibold transition-colors duration-200 ease-in-out",
                           selected
-                            ? "border-transparent bg-[#001830] text-[#F5F5DC] shadow-[0_20px_60px_rgba(0,24,48,0.22)]"
-                            : "border-slate-200 bg-slate-50 text-slate-950 hover:border-transparent hover:bg-[#001830] hover:text-[#F5F5DC]"
+                            ? "border-transparent bg-[#001830] text-white"
+                            : "border-slate-200 bg-[#F8F9FA] text-slate-950"
                         )}
                       >
                         <div
                           className={cn(
-                            "flex h-12 w-12 items-center justify-center rounded-2xl border transition-all duration-300 ease-in-out",
+                            "flex h-10 w-10 items-center justify-center rounded-xl border transition-colors duration-200 ease-in-out",
                             selected
-                              ? "border-transparent bg-white/10 text-[#F5F5DC]"
-                              : "border-slate-200 bg-white text-slate-900 group-hover:border-transparent group-hover:bg-[#0b1f3c] group-hover:text-[#F5F5DC]"
+                              ? "border-transparent bg-white/10 text-white"
+                              : "border-slate-200 bg-white text-slate-900"
                           )}
                         >
-                          <Icon size={22} strokeWidth={1.6} />
+                          <Icon size={18} strokeWidth={1.6} />
                         </div>
-                        <span className={cn(isHe ? "text-right" : "text-center")}>{label}</span>
+                        <span className={isHe ? "flex-1 text-right" : "flex-1 text-left"}>{label}</span>
                       </button>
                     );
                   })}
@@ -212,7 +214,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
             )}
 
             {step === "business-info" && (
-              <div className={cn("rounded-[28px] border border-slate-200/80 bg-slate-50/80 p-10 text-center shadow-[0_18px_48px_rgba(15,23,42,0.08)]", textAlignClass)}>
+              <div className={cn("rounded-[28px] border border-slate-200/80 bg-slate-50/80 p-8 text-center", textAlignClass)}>
                 <div className="mx-auto mb-8 grid h-20 w-20 place-items-center rounded-full bg-[#001830]/10 text-[#001830]">
                   <Check size={34} strokeWidth={2.5} />
                 </div>
@@ -227,7 +229,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
 
             {step === "audience" && (
               <div className="space-y-6">
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-3 sm:grid-cols-2">
                   {audiences.map(({ label, Icon }) => {
                     const selected = audience === label;
                     return (
@@ -236,19 +238,19 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
                         type="button"
                         onClick={() => setAudience(label)}
                         className={cn(
-                          "group flex min-h-[120px] items-center gap-4 rounded-[24px] border px-6 py-5 text-base font-semibold transition-all duration-300 ease-in-out shadow-[0_16px_30px_rgba(15,23,42,0.08)]",
+                          "flex min-h-[96px] items-center gap-3 rounded-xl border px-4 py-3 text-base font-semibold transition-colors duration-200 ease-in-out",
                           selected
-                            ? "border-transparent bg-[#001830] text-[#F5F5DC] shadow-[0_20px_60px_rgba(0,24,48,0.22)]"
-                            : "border-slate-200 bg-slate-50 text-slate-950 hover:border-transparent hover:bg-[#001830] hover:text-[#F5F5DC]"
+                            ? "border-transparent bg-[#001830] text-white"
+                            : "border-slate-200 bg-[#F8F9FA] text-slate-950"
                         )}
                         style={{ justifyContent: isHe ? "flex-end" : "flex-start" }}
                       >
                         <div
                           className={cn(
-                            "flex h-12 w-12 items-center justify-center rounded-[18px] border transition-all duration-300 ease-in-out",
+                            "flex h-10 w-10 items-center justify-center rounded-xl border transition-colors duration-200 ease-in-out",
                             selected
-                              ? "border-transparent bg-white/10 text-[#F5F5DC]"
-                              : "border-slate-200 bg-white text-slate-900 group-hover:border-transparent group-hover:bg-[#0b1f3c] group-hover:text-[#F5F5DC]"
+                              ? "border-transparent bg-white/10 text-white"
+                              : "border-slate-200 bg-white text-slate-900"
                           )}
                         >
                           <Icon size={18} strokeWidth={1.6} />
@@ -262,7 +264,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
             )}
 
             {step === "audience-info" && (
-              <div className={cn("rounded-[28px] border border-slate-200/80 bg-slate-50/80 p-10 text-center shadow-[0_18px_48px_rgba(15,23,42,0.08)]", textAlignClass)}>
+              <div className={cn("rounded-[28px] border border-slate-200/80 bg-slate-50/80 p-8 text-center", textAlignClass)}>
                 <div className="mx-auto mb-8 grid h-20 w-20 place-items-center rounded-full bg-[#001830]/10 text-[#001830]">
                   <Check size={34} strokeWidth={2.5} />
                 </div>
@@ -277,7 +279,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
 
             {step === "goal" && (
               <div className="space-y-6">
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-3 sm:grid-cols-2">
                   {goals.map(({ label, Icon }) => {
                     const selected = goal === label;
                     return (
@@ -286,19 +288,19 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
                         type="button"
                         onClick={() => setGoal(label)}
                         className={cn(
-                          "group flex min-h-[120px] items-center gap-4 rounded-[24px] border px-6 py-5 text-base font-semibold transition-all duration-300 ease-in-out shadow-[0_16px_30px_rgba(15,23,42,0.08)]",
+                          "flex min-h-[96px] items-center gap-3 rounded-xl border px-4 py-3 text-base font-semibold transition-colors duration-200 ease-in-out",
                           selected
-                            ? "border-transparent bg-[#001830] text-[#F5F5DC] shadow-[0_20px_60px_rgba(0,24,48,0.22)]"
-                            : "border-slate-200 bg-slate-50 text-slate-950 hover:border-transparent hover:bg-[#001830] hover:text-[#F5F5DC]"
+                            ? "border-transparent bg-[#001830] text-white"
+                            : "border-slate-200 bg-[#F8F9FA] text-slate-950"
                         )}
                         style={{ justifyContent: isHe ? "flex-end" : "flex-start" }}
                       >
                         <div
                           className={cn(
-                            "flex h-12 w-12 items-center justify-center rounded-[18px] border transition-all duration-300 ease-in-out",
+                            "flex h-10 w-10 items-center justify-center rounded-xl border transition-colors duration-200 ease-in-out",
                             selected
-                              ? "border-transparent bg-white/10 text-[#F5F5DC]"
-                              : "border-slate-200 bg-white text-slate-900 group-hover:border-transparent group-hover:bg-[#0b1f3c] group-hover:text-[#F5F5DC]"
+                              ? "border-transparent bg-white/10 text-white"
+                              : "border-slate-200 bg-white text-slate-900"
                           )}
                         >
                           <Icon size={18} strokeWidth={1.6} />
@@ -311,7 +313,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
               </div>
             )}
 
-            <div className="mt-8 flex flex-col gap-4 border-t border-slate-200/50 pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mt-6 flex flex-col gap-3 border-t border-slate-200/50 pt-6 sm:flex-row sm:items-center sm:justify-between">
               <div className={cn("text-sm text-slate-600", isHe ? "text-right" : "text-left")}>
                 {t("onboarding.stepCounter", { num: stepNumber, total: 4 })}
               </div>
@@ -358,7 +360,7 @@ const OnboardingFlow = ({ onComplete }: OnboardingFlowProps) => {
                     (step === "audience" && !audience) ||
                     (step === "goal" && !goal)
                       ? "cursor-not-allowed bg-slate-300 text-slate-500"
-                      : "bg-[#001830] text-[#F5F5DC] shadow-[0_14px_32px_rgba(0,24,48,0.24)] hover:bg-[#03172c]"
+                      : "bg-[#001830] text-white shadow-[0_14px_32px_rgba(0,24,48,0.24)] hover:bg-[#001830]"
                   )}
                 >
                   {step === "goal" ? t("onboarding.finish") : t("onboarding.page.continue")}
