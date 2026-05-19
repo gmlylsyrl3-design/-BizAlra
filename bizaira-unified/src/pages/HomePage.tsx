@@ -109,16 +109,16 @@ const HomePage = () => {
                   setSelectedFeature(feature.id);
                   navigate(feature.path);
                 }}
-                className={`group relative overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 p-5 text-left shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#001830] ${
-                  isSelected ? "bg-[#001830] text-white border-transparent" : "hover:bg-[#001830] hover:border-transparent"
+                className={`group relative rounded-xl bg-gray-50 p-5 text-left transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#001830] ${
+                  isSelected ? "bg-[#001830] text-white" : "hover:bg-[#001830]"
                 }`}
               >
                 <div className="relative z-10">
                   <div
-                    className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl border transition-colors duration-200 ${
+                    className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-gray-200 bg-white text-[#2D3748] transition-colors duration-200 ${
                       isSelected
                         ? "border-transparent bg-transparent text-white"
-                        : "border-gray-200 bg-white text-[#2D3748] group-hover:border-transparent group-hover:bg-transparent group-hover:text-white"
+                        : "group-hover:border-transparent group-hover:bg-transparent group-hover:text-white"
                     }`}
                   >
                     <IconComponent
