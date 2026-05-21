@@ -7,6 +7,7 @@ const SupportPage = () => {
   const isHe = lang === "he";
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [submittedQuery, setSubmittedQuery] = useState("");
 
   const faqs = [
     { q: t("faq.q1"), a: t("faq.a1") },
@@ -15,6 +16,20 @@ const SupportPage = () => {
     { q: t("faq.q4"), a: t("faq.a4") },
     { q: t("faq.q5"), a: t("faq.a5") },
   ];
+
+  const handleSearch = () => {
+    const nextQuery = searchQuery.trim();
+    setSearchQuery(nextQuery);
+    setSubmittedQuery(nextQuery);
+    setOpenFaq(null);
+  };
+
+  const getDynamicAnswer = (query: string) => {
+    if (!query) return "";
+    return isHe
+      ? `זו תשובה מהירה ומעוצבת לשאלה שלך: "${query}". אם תרצה, נשמח לשלוח לך תשובה מפורטת יותר ישירות לתמיכה.`
+      : `This is a concise tailored response for your question: "${query}". If you'd like, we can provide a more detailed answer directly through support.`;
+  };
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
   const filteredFaqs = normalizedQuery
@@ -57,16 +72,16 @@ const SupportPage = () => {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
-                    setSearchQuery(searchQuery.trim());
+                    handleSearch();
                   }
                 }}
                 placeholder={isHe ? "חפש שאלות ותשובות ב-FAQ" : "Search questions and answers in FAQ"}
-                className="flex-1 min-w-0 rounded-full border border-[#000B18] bg-white px-5 py-4 text-base text-[#000B18] placeholder:text-[#94a3b8] shadow-[0_18px_40px_rgba(0,11,24,0.08)] focus:border-[#000B18] focus:outline-none focus:ring-2 focus:ring-[#000B18]/10"
+                className="flex-1 min-w-0 rounded-full border border-[#000B18] bg-white px-5 py-4 text-sm text-[#000B18] placeholder:text-[#94a3b8] shadow-[0_18px_40px_rgba(0,11,24,0.08)] focus:border-[#000B18] focus:outline-none focus:ring-2 focus:ring-[#000B18]/10"
               />
               <button
                 type="button"
                 className="inline-flex min-w-[140px] items-center justify-center rounded-full bg-[#000B18] px-5 py-4 text-sm font-semibold uppercase tracking-[0.08em] text-white transition hover:bg-[#000B18]/90"
-                onClick={() => setSearchQuery(searchQuery.trim())}
+                onClick={handleSearch}
               >
                 {isHe ? "חפש" : "Search"}
               </button>
@@ -80,31 +95,55 @@ const SupportPage = () => {
         </section>
 
         <section className="space-y-4">
+          {submittedQuery ? (
+            <div className="rounded-[28px] border border-[#E5E7EB] bg-[#F5F5DC] p-5 shadow-[0_12px_30px_rgba(0,11,24,0.08)] text-right">
+              <p className="text-[11px] uppercase tracking-[0.35em] text-[#475569]">
+                {isHe ? "תשובה דינמית" : "Dynamic Answer"}
+              </p>
+              <p className="mt-3 text-sm leading-7 text-[#0F172A]">
+                {getDynamicAnswer(submittedQuery)}
+              </p>
+            </div>
+          ) : null}
+
           {filteredFaqs.length === 0 ? (
             <div className="rounded-[28px] border border-[#E5E7EB] bg-[#F8F9FB] p-12 text-center">
-              <p className="text-lg font-semibold text-[#000B18]">
-                לא נמצאו תוצאות מתאימות. לניסוח אחר או פנה לתמיכה.
+              <p className="text-sm font-semibold text-[#000B18]">
+                {isHe
+                  ? "לא נמצאו תוצאות מתאימות. נסח את השאלה מחדש או פנה לתמיכה."
+                  : "No matching results were found. Try rephrasing or contact support."}
               </p>
             </div>
           ) : (
             filteredFaqs.map((faq, i) => {
               const isOpen = openFaq === i;
               return (
-                <div key={i} className="overflow-hidden rounded-[28px] border border-[#E5E7EB] bg-white shadow-[0_14px_32px_rgba(0,11,24,0.04)]">
+                <div
+                  key={i}
+                  className={`overflow-hidden rounded-[28px] border ${
+                    isOpen ? "border-transparent bg-[#001830]" : "border-[#E5E7EB] bg-white"
+                  } shadow-[0_14px_32px_rgba(0,11,24,0.04)]`}
+                >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : i)}
-                    className="group w-full flex items-center justify-between px-6 py-5 text-start transition-colors duration-200 hover:bg-[#000B18] hover:text-white"
+                    className={`group w-full flex items-center justify-between px-6 py-5 text-start transition-colors duration-200 ${
+                      isOpen ? "text-white" : "hover:bg-[#001830] hover:text-white"
+                    }`}
                   >
-                    <span className="text-base font-semibold text-[#000B18] transition-colors duration-200">
+                    <span className={`text-base font-semibold transition-colors duration-200 ${isOpen ? "text-white" : "text-[#000B18]"}`}>
                       {faq.q}
                     </span>
-                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#F3F7FB] text-[#475569] transition-colors duration-200 group-hover:bg-white">
+                    <div
+                      className={`flex h-10 w-10 items-center justify-center rounded-2xl transition-colors duration-200 ${
+                        isOpen ? "bg-[#0f304d] text-white" : "bg-[#F3F7FB] text-[#475569] group-hover:bg-white"
+                      }`}
+                    >
                       {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                     </div>
                   </button>
                   {isOpen && (
-                    <div className="border-t border-[#E5E7EB] px-6 py-5 bg-white">
-                      <p className="text-sm leading-8 text-[#475569]">{faq.a}</p>
+                    <div className="border-t border-[#0b2f51] px-6 py-5 bg-[#001830]">
+                      <p className="text-sm leading-8 text-white">{faq.a}</p>
                     </div>
                   )}
                 </div>
