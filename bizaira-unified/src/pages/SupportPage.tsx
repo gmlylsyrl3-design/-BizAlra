@@ -98,10 +98,10 @@ const SupportPage = () => {
 
     // Generic intelligent response for other questions
     return {
-      title: isHe ? "תשובה מותאמת" : "Tailored Answer",
+      title: isHe ? "תשובה מקצועית" : "Professional Response",
       content: isHe
-        ? `נשמע כמו שאלה חשובה. לגבי "<strong>${normalizedQuery}</strong>" - אני כאן כדי לתת לך הנחיות חכמות ומעשיות. אם תרצה, אוכל להרחיב ולהסביר איך BizAIra יכולה לעזור לך בתחום הזה.`
-        : `That sounds like an important question. Regarding "<strong>${normalizedQuery}</strong>" - I'm here to provide you with smart and practical guidance. If you'd like, I can expand and explain how BizAIra can help you in this area.`,
+        ? "אין לי את המידע הנתון כדי לספק לך את זה כרגע. תוכל לפנות לתמיכה להמשך טיפול."
+        : "I don't have the data available to provide that at this time. Please contact support for further assistance.",
     };
   };
 
@@ -123,12 +123,12 @@ const SupportPage = () => {
   return (
     <div className="min-h-screen bg-[#F8F9FA] px-5 pt-10 pb-28" dir={isHe ? "rtl" : "ltr"}>
       <div className="mx-auto max-w-5xl">
-        <div className="mb-12">
+        <div className="mb-12 text-right">
           <p className="text-[11px] font-semibold uppercase tracking-[0.4em] text-[#64748B] mb-3">
             {isHe ? "מרכז תמיכה" : "Support Center"}
           </p>
           <h1 className="text-5xl font-black tracking-tight text-[#001830] mb-4">
-            {t("support.title")}
+            {isHe ? "תמיכה" : "Support"}
           </h1>
           <p className="max-w-3xl text-sm leading-7 text-[#475569]">
             {isHe ? "היעזרו ב-AI החכם שלנו או עיינו בשאלות הנפוצות" : "Use our smart AI assistant or browse frequently asked questions"}
@@ -136,7 +136,7 @@ const SupportPage = () => {
         </div>
 
         <section className="mb-8 space-y-4">
-          <div className="rounded-[32px] bg-white p-6 shadow-[0_24px_60px_rgba(0,11,24,0.08)]">
+          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200/70">
             <div className="mb-5">
               <p className="text-xs font-medium uppercase tracking-widest text-[#001830]/60">
                 {isHe ? "עוזר חכם AI" : "Smart AI Assistant"}
@@ -157,12 +157,12 @@ const SupportPage = () => {
                   }
                 }}
                 placeholder={isHe ? "שאל שאלה..." : "Ask a question..."}
-                className="flex-1 min-w-0 rounded-full border border-[#000B18] bg-[#F8F9FA] px-5 py-4 text-sm text-[#001830] placeholder:text-[#001830]/40 shadow-[0_18px_40px_rgba(0,11,24,0.08)] focus:border-[#001830] focus:outline-none focus:ring-2 focus:ring-[#001830]/20 transition"
+                className="flex-1 min-w-0 rounded-2xl border border-slate-200 bg-[#F8F9FA] px-5 py-4 text-sm text-[#001830] placeholder:text-[#001830]/40 shadow-sm focus:border-[#001830] focus:outline-none focus:ring-2 focus:ring-[#001830]/20 transition"
               />
               <button
                 type="button"
                 disabled={!searchQuery.trim() || isLoading}
-                className="inline-flex min-w-[140px] items-center justify-center rounded-full bg-[#000B18] px-5 py-4 text-sm font-semibold uppercase tracking-[0.08em] text-white transition hover:bg-[#000B18]/90 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="inline-flex min-w-[140px] items-center justify-center rounded-full bg-[#001830] px-5 py-4 text-sm font-semibold uppercase tracking-[0.08em] text-white transition hover:bg-[#002741] disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={handleSearch}
               >
                 {isLoading ? (isHe ? "מעבד..." : "Processing...") : isHe ? "חפש" : "Search"}
@@ -177,14 +177,13 @@ const SupportPage = () => {
         {/* AI Response Section */}
         {aiResponse && (
           <section className="mb-8">
-            <div className="rounded-[28px] bg-[#F7F8FA] p-6 shadow-[0_12px_24px_rgba(0,11,24,0.07)]">
+            <div className="rounded-2xl bg-[#F7F8FA] p-6 shadow-sm ring-1 ring-slate-200/70">
               <h3 className="text-sm font-semibold uppercase tracking-[0.22em] text-[#001830] mb-3">
                 {aiResponse.title}
               </h3>
-              <p
-                className="text-sm leading-6 text-[#001830] whitespace-pre-line"
-                dangerouslySetInnerHTML={{ __html: aiResponse.content }}
-              />
+              <p className="text-sm leading-6 text-[#001830] whitespace-pre-line">
+                {aiResponse.content}
+              </p>
             </div>
           </section>
         )}
@@ -202,32 +201,32 @@ const SupportPage = () => {
             return (
               <div
                 key={i}
-                className={`overflow-hidden rounded-[28px] transition-all duration-300 ${
+                className={`overflow-hidden rounded-2xl transition-all duration-300 ${
                   isOpen
-                    ? "bg-[#000B18] shadow-[0_16px_40px_rgba(0,11,24,0.12)]"
-                    : "bg-white shadow-[0_8px_24px_rgba(0,11,24,0.06)] hover:shadow-[0_12px_32px_rgba(0,11,24,0.08)]"
+                    ? "bg-slate-50 shadow-sm"
+                    : "bg-white shadow-sm hover:shadow-md"
                 }`}
               >
                 <button
                   onClick={() => setOpenFaq(isOpen ? null : i)}
-                  className={`group w-full flex items-center justify-between px-6 py-5 text-start transition-colors duration-200 ${
-                    isOpen ? "text-white" : "hover:text-white hover:bg-[#000B18]/5"
-                  }`}
+                  className={`group w-full flex items-center justify-between px-6 py-5 transition-colors duration-200 ${
+                    isOpen ? "text-[#001830]" : "text-[#001830] hover:bg-[#F8FAFC]"
+                  } ${isHe ? "text-right" : "text-left"}`}
                 >
-                  <span className={`text-sm font-semibold transition-colors duration-200 ${isOpen ? "text-white" : "text-[#001830]"}`}>
+                  <span className="text-sm font-semibold text-[#001830] transition-colors duration-200">
                     {faq.q}
                   </span>
                   <div
                     className={`flex h-10 w-10 items-center justify-center rounded-2xl transition-all duration-200 flex-shrink-0 ${
-                      isOpen ? "bg-white/20 text-white" : "bg-[#F8F9FA] text-[#001830] group-hover:bg-[#000B18] group-hover:text-white"
+                      isOpen ? "bg-[#001830] text-white" : "bg-[#F8F9FA] text-[#001830] group-hover:bg-[#001830] group-hover:text-white"
                     }`}
                   >
                     {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                   </div>
                 </button>
                 {isOpen && (
-                  <div className="border-t border-white/10 px-6 py-5 bg-[#000B18]">
-                    <p className="text-sm leading-8 text-white/90">{faq.a}</p>
+                  <div className="border-t border-slate-200 px-6 py-5 bg-slate-50">
+                    <p className="text-sm leading-7 text-[#475569]">{faq.a}</p>
                   </div>
                 )}
               </div>

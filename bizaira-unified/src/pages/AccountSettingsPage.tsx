@@ -113,11 +113,12 @@ const AccountSettingsPage = () => {
             type="button"
             onClick={handleSave}
             disabled={saving || isGuest}
-            className="rounded-full bg-[#000B18] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#00050D] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-full bg-[#001830] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#001830]/90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? (isHe ? "שומר..." : "Saving...") : isHe ? "שמור שינויים" : "Save Changes"}
           </button>
         </div>
+      </div>
 
         <div className="space-y-8">
           {/* Personal Information Section */}
@@ -240,38 +241,9 @@ const AccountSettingsPage = () => {
           )}
 
           {/* System Preferences Section */}
-          <section className="rounded-3xl border-2 border-[#000B18]/10 bg-white p-8 shadow-lg shadow-[#000B18]/5 backdrop-blur-sm">
-            <div className="mb-8">
-              <p className="text-xs font-medium uppercase tracking-widest text-[#001830]/60">
-                {isHe ? "הגדרות" : "Settings"}
-              </p>
-              <h2 className="mt-3 text-2xl font-bold text-[#001830]">
-                {isHe ? "העדפות מערכת" : "System Preferences"}
-              </h2>
-            </div>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              <div>
-                <label className="mb-2 block text-sm font-semibold text-[#001830]">
-                  {isHe ? "שפה" : "Language"}
-                </label>
-                <select
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value)}
-                  disabled={isGuest}
-                  className="w-full rounded-2xl border-2 border-[#000B18]/10 bg-[#F8F9FA] px-4 py-3 text-sm text-[#001830] transition focus:border-[#000B18] focus:outline-none focus:ring-2 focus:ring-[#000B18]/20 disabled:opacity-60 disabled:cursor-not-allowed"
-                  dir={isHe ? "rtl" : "ltr"}
-                >
-                  <option value="he">{isHe ? "עברית" : "Hebrew"}</option>
-                  <option value="en">English</option>
-                </select>
-              </div>
-            </div>
-          </section>
-
           {/* Guest State Info */}
           {isGuest && (
-            <div className="rounded-3xl border-2 border-[#000B18]/20 bg-[#F8F9FA] p-6">
+            <div className="rounded-3xl bg-white p-6 shadow-[0_24px_60px_rgba(0,11,24,0.08)]">
               <div className="flex gap-4">
                 <div className="flex-shrink-0">
                   <Lock className="h-5 w-5 text-[#001830]" />

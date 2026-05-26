@@ -2,6 +2,7 @@ import { useI18n } from "@/lib/i18n";
 
 const PricingPage = () => {
   const { t, lang } = useI18n();
+  const isHe = lang === "he";
 
   const plans = [
     {
@@ -59,12 +60,12 @@ const PricingPage = () => {
   return (
     <div className="min-h-screen bg-white text-[#000B18]" dir={lang === "he" ? "rtl" : "ltr"}>
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mb-12 max-w-3xl">
-          <h1 className="text-4xl font-semibold tracking-tight text-[#000B18] sm:text-5xl">
-            {t("pricing.title")}
+        <div className="mb-12 max-w-3xl text-right">
+          <h1 className="text-5xl font-black tracking-tight text-[#001830] sm:text-6xl font-serif" style={{ fontFamily: "Georgia, 'Times New Roman', serif", lineHeight: 1.05 }}>
+            {isHe ? "אזור אישי" : "Personal Area"}
           </h1>
-          <p className="mt-4 text-lg leading-8 text-[#475569] sm:text-xl">
-            {t("pricing.subtitle")}
+          <p className="mt-2 text-sm font-light leading-6 text-[#475569]/80 sm:text-base font-serif" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>
+            {isHe ? "ניהול פרטי החשבון והגדרות העסק שלך" : "Manage your account details and business settings"}
           </p>
         </div>
 
