@@ -193,13 +193,13 @@ const ImageStudioPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F5DC] text-[#001830]" dir={isHe ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-soft-cream text-[#001830]" dir={isHe ? "rtl" : "ltr"}>
       <div className="mx-auto max-w-7xl px-6 py-6">
         <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <Link
               to="/create"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#001830]/20 bg-white text-[#001830] transition hover:border-[#001830]"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[#001830]/20 bg-surface-cream text-[#001830] transition hover:border-[#001830]"
             >
               <BackArrow size={18} />
             </Link>
@@ -212,7 +212,7 @@ const ImageStudioPage = () => {
               </p>
             </div>
           </div>
-          <div className="rounded-2xl border border-[#001830]/10 bg-white px-3 py-2 text-xs font-semibold text-[#001830] shadow-sm">
+          <div className="rounded-2xl border border-[#001830]/10 bg-surface-cream px-3 py-2 text-xs font-semibold text-[#001830] shadow-sm">
             {remaining} {isHe ? "פעולות" : "actions left"}
           </div>
         </div>
@@ -225,7 +225,7 @@ const ImageStudioPage = () => {
 
         <div className="grid gap-6 lg:grid-cols-[1.6fr_0.95fr]">
           <div className="space-y-5">
-            <div className="rounded-[24px] border border-[#001830]/10 bg-white p-5 shadow-[0_10px_25px_rgba(0,24,48,0.06)]">
+            <div className="luxury-card p-6 text-right">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.24em] text-[#666]">
@@ -240,7 +240,7 @@ const ImageStudioPage = () => {
                 </span>
               </div>
 
-              <div className="min-h-[380px] overflow-hidden rounded-[20px] border border-[#001830]/10 bg-[#F9F9F6] p-4 flex items-center justify-center">
+              <div className="min-h-[380px] overflow-hidden rounded-[16px] border border-[var(--soft-border)] bg-surface-cream p-4 flex items-center justify-center">
                 {results.length > 0 ? (
                   <img
                     src={results[activeResult]}
@@ -315,7 +315,7 @@ const ImageStudioPage = () => {
           </div>
 
           <aside className="space-y-5">
-            <div className="rounded-[24px] border border-[#001830]/10 bg-white p-5 shadow-[0_10px_25px_rgba(0,24,48,0.06)]">
+            <div className="luxury-card rounded-[16px] bg-surface-cream shadow-soft-business p-5">
               <div className="flex gap-2 rounded-full bg-[#F9F9F6] p-1">
                 {([
                   { id: "type" as const, label: isHe ? "סוג" : "Type" },
@@ -326,7 +326,7 @@ const ImageStudioPage = () => {
                     key={tab.id}
                     type="button"
                     onClick={() => setSidebarTab(tab.id)}
-                    className={`flex-1 rounded-full px-3 py-2 text-xs font-semibold transition ${sidebarTab === tab.id ? "bg-[#001830] text-[#F5F5DC]" : "text-[#666] hover:bg-white"}`}
+                    className={`flex-1 rounded-full px-3 py-2 text-xs font-semibold transition ${sidebarTab === tab.id ? "bg-[#001830] text-[#F5F5DC]" : "text-[#666] hover:bg-[#F9F9F6]"}`}
                   >
                     {tab.label}
                   </button>
@@ -343,7 +343,7 @@ const ImageStudioPage = () => {
                           key={item.id}
                           type="button"
                           onClick={() => setImageType(item.id)}
-                          className={`rounded-2xl border px-3 py-2.5 text-xs font-medium transition ${imageType === item.id ? "border-[#001830] bg-[#001830] text-[#F5F5DC]" : "border-[#001830]/10 bg-white text-[#001830] hover:border-[#001830]/30"}`}
+                          className={`rounded-2xl border px-3 py-2.5 text-xs font-medium transition ${imageType === item.id ? "border-[#001830] bg-[#001830] text-[#F5F5DC]" : "border-[#001830]/10 bg-surface-cream text-[#001830] hover:border-[#001830]/30"}`}
                         >
                           {isHe ? item.he : item.en}
                         </button>
@@ -359,7 +359,7 @@ const ImageStudioPage = () => {
                           key={item.id}
                           type="button"
                           onClick={() => setRatio(item.id)}
-                          className={`rounded-2xl border px-3 py-2.5 text-xs font-medium transition ${ratio === item.id ? "border-[#001830] bg-[#001830] text-[#F5F5DC]" : "border-[#001830]/10 bg-white text-[#001830] hover:border-[#001830]/30"}`}
+                          className={`rounded-2xl border px-3 py-2.5 text-xs font-medium transition ${ratio === item.id ? "border-[#001830] bg-[#001830] text-[#F5F5DC]" : "border-[#001830]/10 bg-surface-cream text-[#001830] hover:border-[#001830]/30"}`}
                         >
                           {item.label}
                         </button>
@@ -379,7 +379,7 @@ const ImageStudioPage = () => {
                           key={item.id}
                           type="button"
                           onClick={() => setStyle(item.id)}
-                          className={`rounded-2xl border px-3 py-2.5 text-xs font-medium transition ${style === item.id ? "border-[#001830] bg-[#001830] text-[#F5F5DC]" : "border-[#001830]/10 bg-white text-[#001830] hover:border-[#001830]/30"}`}
+                          className={`rounded-2xl border px-3 py-2.5 text-xs font-medium transition ${style === item.id ? "border-[#001830] bg-[#001830] text-[#F5F5DC]" : "border-[#001830]/10 bg-surface-cream text-[#001830] hover:border-[#001830]/30"}`}
                         >
                           {isHe ? item.he : item.en}
                         </button>
@@ -419,7 +419,7 @@ const ImageStudioPage = () => {
                         value={bgColor}
                         onChange={(e) => setBgColor(e.target.value)}
                         placeholder="#ffffff"
-                        className="flex-1 rounded-lg border border-[#001830]/10 bg-white px-3 py-1.5 text-xs text-[#001830] placeholder:text-[#ccc] focus:border-[#001830] focus:outline-none focus:ring-2 focus:ring-[#001830]/10"
+                        className="flex-1 rounded-lg border border-[#001830]/10 bg-surface-cream px-3 py-1.5 text-xs text-[#001830] placeholder:text-[#ccc] focus:border-[#001830] focus:outline-none focus:ring-2 focus:ring-[#001830]/10"
                       />
                     </div>
                   </div>
@@ -435,7 +435,7 @@ const ImageStudioPage = () => {
                       onChange={(e) => setDescription(e.target.value)}
                       placeholder={isHe ? "תאר את התמונה המבוקשת..." : "Describe the desired image..."}
                       rows={5}
-                      className="w-full rounded-lg border border-[#001830]/10 bg-white px-3 py-2 text-xs text-[#001830] placeholder:text-[#ccc] focus:border-[#001830] focus:outline-none focus:ring-2 focus:ring-[#001830]/10"
+                      className="w-full rounded-lg border border-[#001830]/10 bg-surface-cream px-3 py-2 text-xs text-[#001830] placeholder:text-[#ccc] focus:border-[#001830] focus:outline-none focus:ring-2 focus:ring-[#001830]/10"
                     />
                   </div>
                 </div>
@@ -445,7 +445,7 @@ const ImageStudioPage = () => {
             <button
               type="button"
               onClick={() => fileRef.current?.click()}
-              className="w-full rounded-2xl border border-[#001830]/10 bg-white px-4 py-3 text-xs font-semibold text-[#001830] transition hover:border-[#001830]/30 hover:bg-[#F9F9F6]"
+              className="w-full rounded-2xl border border-[var(--soft-border)] bg-surface-cream px-4 py-3 text-xs font-semibold text-[#001830] transition hover:border-[#001830]/30 hover:bg-[#F5F5DC]"
             >
               <Upload size={16} className="inline-block me-1" />
               <span>{isHe ? "העלה תמונה (אופ')" : "Upload image (optional)"}</span>
@@ -499,8 +499,8 @@ const ImageStudioPage = () => {
       )}
 
       {isLocked && (
-        <div className="fixed inset-0 bg-[#F5F5DC]/90 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-[24px] p-6 shadow-2xl border border-[#001830]/10 max-w-sm mx-4 text-center">
+        <div className="fixed inset-0 bg-soft-cream/90 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="luxury-card p-6 border border-[#001830]/10 max-w-sm mx-4 text-center">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F9F9F6] text-[#001830]">
               <Lock size={24} />
             </div>

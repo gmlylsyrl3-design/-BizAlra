@@ -85,7 +85,7 @@ const AuthGateway = ({ onComplete, onboardingData }: AuthGatewayProps) => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-5 py-10 overflow-y-auto bg-white"
+      className="min-h-screen flex items-center justify-center px-5 py-10 overflow-y-auto bg-soft-cream"
       dir={isHe ? "rtl" : "ltr"}
     >
       <div className="w-full max-w-sm mx-auto">
@@ -113,7 +113,7 @@ const AuthGateway = ({ onComplete, onboardingData }: AuthGatewayProps) => {
         <form
           onSubmit={handleSubmit}
           className="rounded-2xl p-7 space-y-5 transition-opacity duration-300 max-h-[calc(100vh-180px)] overflow-y-auto pb-8"
-          style={{ backgroundColor: "#FFFFFF", boxShadow: "0 8px 40px -8px rgba(0,31,63,0.1)" }}
+          style={{ backgroundColor: "var(--surface-cream)", boxShadow: "0 8px 40px -8px rgba(0,31,63,0.1)" }}
         >
           {/* Name field */}
           {!isLogin && (

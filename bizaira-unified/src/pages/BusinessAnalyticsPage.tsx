@@ -165,7 +165,7 @@ const BusinessAnalyticsPage = () => {
   const proFeatures = [t("analytics.forecast"), t("analytics.simulations"), t("analytics.multiYear"), t("analytics.breakeven")];
 
   return (
-    <div className="min-h-screen pb-24" dir={isHe ? "rtl" : "ltr"}>
+    <div className="min-h-screen pb-24 bg-soft-cream" dir={isHe ? "rtl" : "ltr"}>
       <div className="sticky top-0 z-40 glass-card border-b border-border/40 px-4 py-3">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
           <div className="flex items-center gap-3">

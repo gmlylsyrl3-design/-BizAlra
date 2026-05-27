@@ -10,10 +10,8 @@ import {
   Calendar,
 } from "lucide-react";
 
-const PEARL_WHITE = "#FFFFFF";
 const NAVY = "#000810";
 const GRAY_TEXT = "#6B7280";
-const ICON_BG = "#E9EEF5";
 
 const CreatePage = () => {
   const navigate = useNavigate();
@@ -67,8 +65,8 @@ const CreatePage = () => {
   ];
 
   return (
-    <div className="min-h-screen pb-32 bg-white" dir={isHe ? "rtl" : "ltr"}>
-      <div className="px-6 pt-8 pb-6">
+    <div className="min-h-screen pb-32 bg-soft-cream text-[#001830]" dir={isHe ? "rtl" : "ltr"}>
+      <div className="px-6 pt-10 pb-6">
         <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: GRAY_TEXT, letterSpacing: "0.1em" }}>
           {t("create.heading")}
         </p>
@@ -77,14 +75,15 @@ const CreatePage = () => {
           {t("create.title")}
         </h1>
 
-        <p className="text-base leading-relaxed" style={{ color: GRAY_TEXT }}>
+        <p className="text-base leading-relaxed max-w-2xl" style={{ color: GRAY_TEXT }}>
           {t("create.subheading")}
         </p>
       </div>
 
-      <div className="px-6 space-y-3">
+      <div className="max-w-6xl mx-auto px-6 space-y-4">
         {tools.map((tool, i) => {
           const IconComp = tool.icon;
+          const isSelected = selectedTool === tool.id;
 
           return (
             <button
@@ -93,19 +92,25 @@ const CreatePage = () => {
                 setSelectedTool(tool.id);
                 navigate(tool.route);
               }}
-              className="group relative w-full rounded-3xl bg-white shadow-[0_18px_50px_-28px_rgba(0,24,48,0.18)] border border-[#E5E7EB] transition-all duration-300 ease-out overflow-hidden hover:bg-[#000a1a] hover:ring-1 hover:ring-[#000810]/40"
-              style={{ animationDelay: `${i * 55}ms`, minHeight: "124px" }}
+              className={`luxury-card group w-full overflow-hidden rounded-[16px] transition duration-300 ${isSelected ? "shadow-soft-business ring-1 ring-[#001830]/20" : "hover:shadow-soft-business"}`}
+              style={{ animationDelay: `${i * 55}ms` }}
             >
-              <div className="flex items-center gap-4 px-5 py-5 h-full">
-                    <div className={`flex-1 ${isHe ? "text-right" : "text-left"}`}>
-                      <div className="text-lg font-semibold leading-snug text-[#000810] transition-colors duration-300 group-hover:text-white">
-                        {t(tool.titleKey)}
-                      </div>
-                      <div className="text-sm leading-relaxed mt-1 text-[#6B7280] transition-colors duration-300 group-hover:text-slate-300">
-                        {t(tool.descKey)}
-                      </div>
-                    </div>
+              <div className="luxury-card-inner">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#001830]/10 text-[#001830]">
+                    <IconComp size={22} />
                   </div>
+
+                  <div className="space-y-3">
+                    <h2 className="luxury-card-title text-2xl">{t(tool.titleKey)}</h2>
+                    <p className="luxury-card-text text-sm leading-7">{t(tool.descKey)}</p>
+                  </div>
+                </div>
+
+                <div className="mt-6 text-sm font-semibold uppercase tracking-[0.12em] text-soft-muted">
+                  {isHe ? "פתח" : "Open"}
+                </div>
+              </div>
             </button>
           );
         })}

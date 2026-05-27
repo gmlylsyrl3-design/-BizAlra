@@ -196,7 +196,7 @@ const ProductPhotoStudioPage = () => {
   // Result view (only when not in customize step)
   if (resultImage && step !== "customize") {
     return (
-      <div className="min-h-screen pb-24">
+      <div className="min-h-screen pb-24 bg-soft-cream">
         <div className="sticky top-0 z-40 glass-card border-b border-border/40 px-4 py-3">
           <div className="flex items-center justify-between max-w-lg mx-auto">
             <div className="flex items-center gap-3">
@@ -229,7 +229,7 @@ const ProductPhotoStudioPage = () => {
   }
 
   return (
-    <div className="min-h-screen pb-24" dir={isHe ? "rtl" : "ltr"}>
+    <div className="min-h-screen pb-24 bg-soft-cream" dir={isHe ? "rtl" : "ltr"}>
       {/* Header */}
       <div className="sticky top-0 z-40 glass-card border-b border-border/40 px-4 py-3">
         <div className="flex items-center justify-between max-w-lg mx-auto">

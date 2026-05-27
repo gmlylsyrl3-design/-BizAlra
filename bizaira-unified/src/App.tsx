@@ -58,10 +58,10 @@ class AppErrorBoundary extends Component<{ children: ReactNode }, { hasError: bo
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-white text-[#000B18] p-10" dir="ltr">
-          <div className="mx-auto max-w-3xl rounded-[32px] border border-[#E5E8EB] bg-[#FAF9FC] p-10 shadow-[0_24px_64px_rgba(0,11,24,0.1)]">
+        <div className="min-h-screen bg-soft-cream text-[#001830] p-10" dir="ltr">
+          <div className="mx-auto max-w-3xl rounded-[32px] border border-[var(--soft-border)] bg-surface-cream p-10 shadow-[0_24px_64px_rgba(0,11,24,0.1)]">
             <p className="text-sm uppercase tracking-[0.3em] text-[#64748B]">Unexpected error</p>
-            <h1 className="mt-4 text-3xl font-semibold text-[#000B18]">Something went wrong</h1>
+            <h1 className="mt-4 text-3xl font-semibold text-[#001830]">Something went wrong</h1>
             <p className="mt-3 text-base leading-7 text-[#475569]">
               The app encountered an unexpected issue. Please refresh the page or contact support if this continues.
             </p>

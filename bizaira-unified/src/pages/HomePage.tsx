@@ -69,19 +69,16 @@ const HomePage = () => {
 
   return (
     <div
-      className="min-h-screen pb-24 px-4 sm:px-6 md:px-8 bg-[#F8FAFC]"
+      className="min-h-screen pb-24 px-4 sm:px-6 md:px-8 bg-soft-cream"
       dir={isHe ? "rtl" : "ltr"}
     >
       {/* Clean Header with Login Button */}
       <div className="pt-12 pb-12 max-w-5xl mx-auto flex flex-col gap-4 items-center text-center">
         <div className="w-full">
-          <h1
-            className="font-light text-3xl md:text-4xl text-[#0A192F] tracking-tight"
-            style={{ color: "#0A192F", fontFamily: "'Assistant', 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
-          >
+          <h1 className="font-bold text-3xl md:text-4xl text-[#001830] tracking-tight">
             {isHe ? "ברוכים הבאים למרכז הניהול העסקי שלך" : "Welcome to your business management hub"}
           </h1>
-          <div className="mx-auto max-w-2xl text-sm font-light text-[#64748B] mt-3">
+          <div className="mx-auto max-w-2xl text-sm font-light text-soft-muted mt-3">
             {isHe ? "בחר מסלול חכם, התחבר או צור חשבון כדי להתחיל לנהל את העסק שלך בקלות ובסטייל." : "Choose a smart path, log in or sign up to start managing your business easily and elegantly."}
           </div>
         </div>
@@ -103,35 +100,27 @@ const HomePage = () => {
       </div>
 
       {/* Executive feature rows */}
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
-          {features.map((feature) => {
-            const IconComponent = feature.icon;
+      <div className="max-w-6xl mx-auto space-y-5">
+        {features.map((feature) => {
+          const IconComponent = feature.icon;
 
-            return (
-              <button
-                key={feature.id}
-                type="button"
-                onClick={() => navigate(feature.path)}
-                className={`group flex h-[20rem] w-full flex-col justify-between overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white p-6 ${isHe ? "text-right" : "text-left"} transition-all duration-300 ease-in-out hover:bg-[#0A192F]`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className="space-y-2">
-                    <h3 className="font-normal text-lg text-[#0A192F] transition-all duration-300 group-hover:text-white">
-                      {feature.title}
-                    </h3>
-                    <p className="max-w-2xl font-light text-sm text-[#64748B] leading-relaxed transition-all duration-300 group-hover:text-white/85">
-                      {feature.desc}
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-6 text-sm font-light text-[#64748B] transition-all duration-300 group-hover:text-white/90">
-                  {isHe ? "פתח" : "Open"}
-                </div>
-              </button>
-            );
-          })}
-        </div>
+          return (
+            <button
+              key={feature.id}
+              type="button"
+              onClick={() => navigate(feature.path)}
+              className="luxury-card group w-full overflow-hidden rounded-[16px] text-right transition duration-300 hover:shadow-soft-business"
+            >
+              <div className="luxury-card-inner">
+                <h3 className="luxury-card-title text-2xl">{feature.title}</h3>
+                <p className="luxury-card-text text-sm leading-7">{feature.desc}</p>
+              </div>
+              <div className="mt-6 text-sm font-normal uppercase tracking-[0.12em] text-soft-muted">
+                {isHe ? "פתח" : "Open"}
+              </div>
+            </button>
+          );
+        })}
       </div>
       <CookieConsentPopup 
         isVisible={showCookiePopup} 

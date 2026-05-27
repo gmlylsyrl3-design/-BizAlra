@@ -121,7 +121,7 @@ const SupportPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] px-5 pt-10 pb-28" dir={isHe ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-soft-cream px-5 pt-10 pb-28" dir={isHe ? "rtl" : "ltr"}>
       <div className="mx-auto max-w-5xl">
         <div className="mb-12 text-right">
           <p className="text-[11px] font-semibold uppercase tracking-[0.4em] text-[#64748B] mb-3">
@@ -136,8 +136,8 @@ const SupportPage = () => {
         </div>
 
         <section className="mb-8 space-y-4">
-          <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200/70">
-            <div className="mb-5">
+          <div className="luxury-card rounded-[16px] bg-surface-cream shadow-soft-business">
+            <div className="mb-5 text-right">
               <p className="text-xs font-medium uppercase tracking-widest text-[#001830]/60">
                 {isHe ? "עוזר חכם AI" : "Smart AI Assistant"}
               </p>
@@ -157,18 +157,18 @@ const SupportPage = () => {
                   }
                 }}
                 placeholder={isHe ? "שאל שאלה..." : "Ask a question..."}
-                className="flex-1 min-w-0 rounded-2xl border border-slate-200 bg-[#F8F9FA] px-5 py-4 text-sm text-[#001830] placeholder:text-[#001830]/40 shadow-sm focus:border-[#001830] focus:outline-none focus:ring-2 focus:ring-[#001830]/20 transition"
+                className="flex-1 min-w-0 rounded-[16px] border border-[var(--soft-border)] bg-surface-cream px-5 py-4 text-sm text-[#001830] placeholder:text-[#001830]/40 shadow-sm focus:border-[#001830] focus:outline-none focus:ring-2 focus:ring-[#001830]/20 transition"
               />
               <button
                 type="button"
                 disabled={!searchQuery.trim() || isLoading}
-                className="inline-flex min-w-[140px] items-center justify-center rounded-full bg-[#001830] px-5 py-4 text-sm font-semibold uppercase tracking-[0.08em] text-white transition hover:bg-[#002741] disabled:opacity-60 disabled:cursor-not-allowed"
+                className="inline-flex min-w-[140px] items-center justify-center rounded-[16px] bg-[#001830] px-5 py-4 text-sm font-semibold uppercase tracking-[0.08em] text-white transition hover:bg-[#002741] disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={handleSearch}
               >
                 {isLoading ? (isHe ? "מעבד..." : "Processing...") : isHe ? "חפש" : "Search"}
               </button>
             </div>
-            <p className="mt-4 text-xs leading-6 text-[#475569]">
+            <p className="mt-4 text-xs leading-6 text-soft-muted">
               {isHe ? "נשמח לענות על כל שאלה" : "We're happy to help with any question"}
             </p>
           </div>
@@ -177,11 +177,11 @@ const SupportPage = () => {
         {/* AI Response Section */}
         {aiResponse && (
           <section className="mb-8">
-            <div className="rounded-2xl bg-[#F7F8FA] p-6 shadow-sm ring-1 ring-slate-200/70">
-              <h3 className="text-sm font-semibold uppercase tracking-[0.22em] text-[#001830] mb-3">
+            <div className="luxury-card rounded-[16px] bg-surface-cream shadow-soft-business">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.22em] text-[#001830] mb-3 text-right">
                 {aiResponse.title}
               </h3>
-              <p className="text-sm leading-6 text-[#001830] whitespace-pre-line">
+              <p className="text-sm leading-6 text-soft-navy whitespace-pre-line">
                 {aiResponse.content}
               </p>
             </div>
@@ -201,32 +201,30 @@ const SupportPage = () => {
             return (
               <div
                 key={i}
-                className={`overflow-hidden rounded-2xl transition-all duration-300 ${
-                  isOpen
-                    ? "bg-slate-50 shadow-sm"
-                    : "bg-white shadow-sm hover:shadow-md"
+                className={`luxury-card rounded-[16px] bg-surface-cream transition-all duration-300 ${
+                  isOpen ? "shadow-soft-business" : "hover:shadow-soft-business"
                 }`}
               >
                 <button
                   onClick={() => setOpenFaq(isOpen ? null : i)}
-                  className={`group w-full flex items-center justify-between px-6 py-5 transition-colors duration-200 ${
-                    isOpen ? "text-[#001830]" : "text-[#001830] hover:bg-[#F8FAFC]"
-                  } ${isHe ? "text-right" : "text-left"}`}
+                  className={`group w-full flex items-center justify-between rounded-[16px] px-6 py-6 transition duration-200 text-right ${
+                    isOpen ? "text-[#001830]" : "text-[#001830] hover:bg-[#F5F5DC]"
+                  }`}
                 >
-                  <span className="text-sm font-semibold text-[#001830] transition-colors duration-200">
+                  <span className="text-base font-semibold text-[#001830] transition-colors duration-200">
                     {faq.q}
                   </span>
                   <div
                     className={`flex h-10 w-10 items-center justify-center rounded-2xl transition-all duration-200 flex-shrink-0 ${
-                      isOpen ? "bg-[#001830] text-white" : "bg-[#F8F9FA] text-[#001830] group-hover:bg-[#001830] group-hover:text-white"
+                      isOpen ? "bg-[#001830] text-white" : "bg-surface-cream text-[#001830] group-hover:bg-[#001830] group-hover:text-white"
                     }`}
                   >
                     {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                   </div>
                 </button>
                 {isOpen && (
-                  <div className="border-t border-slate-200 px-6 py-5 bg-slate-50">
-                    <p className="text-sm leading-7 text-[#475569]">{faq.a}</p>
+                  <div className="border-t border-[var(--soft-border)] px-6 py-5 bg-surface-cream">
+                    <p className="text-sm leading-7 text-soft-muted">{faq.a}</p>
                   </div>
                 )}
               </div>

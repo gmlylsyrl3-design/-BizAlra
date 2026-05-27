@@ -37,7 +37,7 @@ const Layout = ({ children }: LayoutProps) => {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <div dir={isHe ? "rtl" : "ltr"} className={`min-h-screen flex flex-col bg-white ${isHe ? "text-right" : "text-left"}`}>
+    <div dir={isHe ? "rtl" : "ltr"} className={`min-h-screen flex flex-col bg-soft-cream ${isHe ? "text-right" : "text-left"}`}>
       {/* Skip to main content link */}
       <a
         href="#main-content"
@@ -50,7 +50,7 @@ const Layout = ({ children }: LayoutProps) => {
       <div className="lg:hidden fixed top-3 right-3 z-50">
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg p-2 shadow-sm"
+          className="bg-soft-cream/90 backdrop-blur-sm border border-[rgba(74,85,104,0.12)] rounded-lg p-2 shadow-soft-business"
           aria-label={menuOpen ? t("nav.close") : t("nav.menu")}
         >
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -60,7 +60,7 @@ const Layout = ({ children }: LayoutProps) => {
       {/* Mobile side menu */}
       {menuOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-black/50" onClick={closeMenu}>
-          <div className="fixed right-0 top-0 h-full w-64 bg-white shadow-lg" onClick={(e) => e.stopPropagation()}>
+          <div className="fixed right-0 top-0 h-full w-64 bg-soft-cream shadow-soft-business" onClick={(e) => e.stopPropagation()}>
             <div className="p-4">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-lg font-semibold">{t("nav.menu")}</h2>
@@ -92,7 +92,7 @@ const Layout = ({ children }: LayoutProps) => {
       {isLocked && isStudioPath && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#001830]/20 p-6">
           <div className="pointer-events-none absolute inset-0 bg-[#001830]/10 backdrop-blur-xl" />
-          <div className="relative w-full max-w-2xl rounded-[32px] border border-slate-200/80 bg-white/95 p-8 shadow-[0_32px_80px_rgba(0,24,48,0.18)] backdrop-blur-xl">
+          <div className="relative w-full max-w-2xl rounded-[32px] border border-[var(--soft-border)] bg-surface-cream/95 p-8 shadow-[0_32px_80px_rgba(0,24,48,0.18)] backdrop-blur-xl">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#001830] mb-3">
               {t("app.limit.title")}
             </p>
@@ -122,7 +122,7 @@ const Layout = ({ children }: LayoutProps) => {
           </div>
         </div>
       )}
-      <footer className="bg-white border-t border-gray-100 py-2 px-4 text-center">
+      <footer className="bg-soft-cream border-t border-[rgba(74,85,104,0.12)] py-2 px-4 text-center">
         <div className="flex justify-center items-center gap-4">
           <Link to="/accessibility" className="text-xs text-gray-500 hover:text-gray-700">
             {t("footer.accessibility")}

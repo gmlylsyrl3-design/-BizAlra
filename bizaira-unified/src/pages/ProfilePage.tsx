@@ -21,29 +21,28 @@ const ProfilePage = () => {
   const creditPercent = isPro ? 100 : Math.round((remainingCredits / Math.max(totalCredits, 1)) * 100);
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-[#000B18]" dir={isHe ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-soft-cream text-[#001830]" dir={isHe ? "rtl" : "ltr"}>
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         <header className="mb-8">
           <div className="max-w-4xl mx-auto text-right">
-            <h1 className="text-5xl font-black tracking-tight text-[#001830] font-serif" style={{ fontFamily: "Georgia, 'Times New Roman', serif", lineHeight: 1.05 }}>
+            <h1 className="text-5xl font-black tracking-tight text-[#001830]">
               {isHe ? "אזור אישי" : "Personal Area"}
             </h1>
-            <p className="mt-2 max-w-2xl text-sm font-light leading-6 text-[#001830]/70 font-serif" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>
+            <p className="mt-2 max-w-2xl text-sm font-light leading-7 text-soft-muted">
               {isHe ? "ניהול פרטי החשבון והגדרות העסק שלך" : "Manage your account details and business settings"}
             </p>
           </div>
         </header>
 
-        <section className="rounded-2xl bg-white p-8 shadow-sm">
-          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+        <section className="luxury-card p-8 text-right">          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-5">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-50 text-[#000B18]">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-cream text-[#001830]">
                 <UserCircle2 size={30} />
               </div>
               <div className="text-right">
                 <p className="text-xs uppercase tracking-[0.26em] text-[#001830]/80">{planLabel}</p>
-                <h2 className="mt-2 text-2xl font-semibold text-[#000B18]">{isHe ? `ברוכה השבה, ${userName}` : `Welcome back, ${userName}`}</h2>
-                <p className="mt-1 text-sm text-slate-600">{studioStatus}</p>
+                <h2 className="mt-2 text-2xl font-semibold text-[#001830]">{isHe ? `ברוכה השבה, ${userName}` : `Welcome back, ${userName}`}</h2>
+                <p className="mt-1 text-sm text-soft-muted">{studioStatus}</p>
               </div>
             </div>
 
@@ -64,17 +63,17 @@ const ProfilePage = () => {
           </div>
         </section>
 
-        <section className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
+        <section className="mt-8 luxury-card p-6 text-right">
           <div className="mb-4">
-            <p className="text-xs uppercase tracking-[0.26em] text-slate-500 text-right">{isHe ? "כלי ניהול מהירים" : "Quick actions"}</p>
-            <h3 className="mt-2 text-xl font-semibold text-[#000B18] text-right">{isHe ? "ניהול חשבון וסטודיו" : "Account & studio controls"}</h3>
+            <p className="text-xs uppercase tracking-[0.26em] text-soft-muted text-right">{isHe ? "כלי ניהול מהירים" : "Quick actions"}</p>
+            <h3 className="mt-2 text-xl font-semibold text-[#001830] text-right">{isHe ? "ניהול חשבון וסטודיו" : "Account & studio controls"}</h3>
           </div>
 
           <div className="flex flex-col gap-3">
             <button
               type="button"
               onClick={() => navigate("/support")}
-              className="group flex flex-row-reverse items-center justify-between w-full rounded-[28px] bg-white px-5 py-4 text-sm font-semibold text-[#000B18] transition duration-300 hover:bg-[#001830] hover:text-white"
+              className="group flex flex-row-reverse items-center justify-between w-full rounded-[16px] border border-[var(--soft-border)] bg-surface-cream px-6 py-5 text-right text-sm font-semibold text-[#001830] transition duration-300 hover:border-[#001830]/20 hover:shadow-soft-business"
             >
               <span>{isHe ? "תמיכה" : "Support"}</span>
               <Headphones size={20} className="transition-colors duration-300" />
@@ -83,7 +82,7 @@ const ProfilePage = () => {
             <button
               type="button"
               onClick={() => navigate("/pricing")}
-              className="group flex flex-row-reverse items-center justify-between w-full rounded-[28px] bg-white px-5 py-4 text-sm font-semibold text-[#000B18] transition duration-300 hover:bg-[#001830] hover:text-white"
+              className="group flex flex-row-reverse items-center justify-between w-full rounded-[16px] border border-[var(--soft-border)] bg-surface-cream px-6 py-5 text-right text-sm font-semibold text-[#001830] transition duration-300 hover:border-[#001830]/20 hover:shadow-soft-business"
             >
               <span>{isHe ? "ניהול מנוי" : "Manage subscription"}</span>
               <CreditCard size={20} className="transition-colors duration-300" />
@@ -92,7 +91,7 @@ const ProfilePage = () => {
             <button
               type="button"
               onClick={() => navigate("/settings")}
-              className="group flex flex-row-reverse items-center justify-between w-full rounded-[28px] bg-white px-5 py-4 text-sm font-semibold text-[#000B18] transition duration-300 hover:bg-[#001830] hover:text-white"
+              className="group flex flex-row-reverse items-center justify-between w-full rounded-[16px] border border-[var(--soft-border)] bg-surface-cream px-6 py-5 text-right text-sm font-semibold text-[#001830] transition duration-300 hover:border-[#001830]/20 hover:shadow-soft-business"
             >
               <span>{isHe ? "הגדרות" : "Settings"}</span>
               <Settings size={20} className="transition-colors duration-300" />
