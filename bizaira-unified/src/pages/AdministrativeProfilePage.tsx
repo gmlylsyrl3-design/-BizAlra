@@ -45,7 +45,7 @@ const AdministrativeProfilePage = () => {
             className="inline-flex items-center gap-2 rounded-full border border-transparent bg-transparent px-0 py-2 text-sm font-bold text-[#001830] transition hover:text-[#0B2A4B]"
           >
             <ArrowLeft size={16} className="rotate-180" />
-            {isHe ? "→ חזרה לאזור האישי" : "→ Back to Personal Area"}
+            {isHe ? "→ חזרה למרכז הבקרה הניהולי" : "→ Back to Executive Control Center"}
           </button>
 
           <div className="max-w-3xl text-right">

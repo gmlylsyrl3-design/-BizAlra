@@ -128,7 +128,7 @@ const SupportPage = () => {
             {isHe ? "מרכז תמיכה" : "Support Center"}
           </p>
           <h1 className="luxury-page-title mb-4">
-            {isHe ? "תמיכה" : "Support"}
+            {isHe ? "מרכז תמיכה וייעוץ טכנולוגי" : "Technical Support & Advisory Center"}
           </h1>
           <p className="luxury-page-copy">
             {isHe ? "היעזרו ב-AI החכם שלנו או עיינו בשאלות הנפוצות" : "Use our smart AI assistant or browse frequently asked questions"}

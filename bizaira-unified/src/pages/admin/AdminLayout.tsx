@@ -20,7 +20,7 @@ const menuItems = [
   { label: "רכיבים", icon: Component, path: "/admin/components" },
   { label: "כלי AI", icon: Bot, path: "/admin/ai" },
   { label: "משתמשים", icon: Users, path: "/admin/users" },
-  { label: "הגדרות", icon: Settings, path: "/admin/settings" },
+  { label: "פרמטרים מובנים ומאפייני אפיון", icon: Settings, path: "/admin/settings" },
 ];
 
 const AdminLayout = ({ children }: { children: ReactNode }) => {

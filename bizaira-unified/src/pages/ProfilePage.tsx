@@ -39,10 +39,10 @@ const ProfilePage = () => {
               {isHe ? "מרכז הניהול" : "Account Center"}
             </p>
             <h1 className="luxury-page-title">
-              {isHe ? "אזור אישי" : "Personal Area"}
+              {isHe ? "מרכז בקרה ופרופיל ניהולי" : "Executive Control Center & Administrative Profile"}
             </h1>
             <p className="luxury-page-copy mt-3">
-              {isHe ? "ניהול פרטי החשבון והגדרות העסק שלך" : "Manage your account details and business settings"}
+              {isHe ? "פיקוח על מאפייני המערכת, תנאי התקשרות והגדרות ארגוניות" : "Oversight of system attributes, service terms and organizational settings"}
             </p>
           </div>
         </header>
@@ -99,12 +99,12 @@ const ProfilePage = () => {
                     <Headphones size={20} />
                   </div>
                   <div>
-                    <p className="luxury-card-title text-sm">{isHe ? "תמיכה" : "Support"}</p>
-                    <p className="luxury-card-text text-xs">{isHe ? "עזרה מהירה ומענה מקצועי" : "Quick help and expert guidance"}</p>
+                    <p className="luxury-card-title text-sm">{isHe ? "מרכז תמיכה וייעוץ טכנולוגי" : "Technical Support & Advisory Center"}</p>
+                    <p className="luxury-card-text text-xs">{isHe ? "פתרון תקלות בזמן אמת ומענה מקצועי מבוסס AI" : "Real-time issue resolution and expert AI-assisted support"}</p>
                   </div>
                 </div>
                 <span className="inline-flex items-center justify-center rounded-full bg-[#001830] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-[#FAF9F6] shadow-[0_10px_24px_rgba(0,24,48,0.12)] whitespace-nowrap">
-                  {isHe ? "פתח ←" : "Open →"}
+                  {isHe ? "גישה למודול ←" : "Access Module →"}
                 </span>
               </div>
             </button>
@@ -120,12 +120,12 @@ const ProfilePage = () => {
                     <CreditCard size={20} />
                   </div>
                   <div>
-                    <p className="luxury-card-title text-sm">{isHe ? "ניהול מנוי" : "Manage subscription"}</p>
-                    <p className="luxury-card-text text-xs">{isHe ? "סקירת תכנית והתאמות" : "Review your plan and upgrade options"}</p>
+                    <p className="luxury-card-title text-sm">{isHe ? "סטטוס מנוי ותנאי התקשרות" : "Subscription Status & Service Terms"}</p>
+                    <p className="luxury-card-text text-xs">{isHe ? "ניטור חבילת שירות, ניצול אשראי והרחבות" : "Monitoring service bundles, credit utilization and add-ons"}</p>
                   </div>
                 </div>
                 <span className="inline-flex items-center justify-center rounded-full bg-[#001830] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-[#FAF9F6] shadow-[0_10px_24px_rgba(0,24,48,0.12)] whitespace-nowrap">
-                  {isHe ? "פתח ←" : "Open →"}
+                  {isHe ? "גישה למודול ←" : "Access Module →"}
                 </span>
               </div>
             </button>
@@ -141,12 +141,12 @@ const ProfilePage = () => {
                     <Settings size={20} />
                   </div>
                   <div>
-                    <p className="luxury-card-title text-sm">{isHe ? "הגדרות" : "Settings"}</p>
-                    <p className="luxury-card-text text-xs">{isHe ? "התאמות פרטיות ונגישות" : "Privacy and accessibility preferences"}</p>
+                    <p className="luxury-card-title text-sm">{isHe ? "פרמטרים מובנים ומאפייני אפיון" : "Built-in Parameters & Configuration Attributes"}</p>
+                    <p className="luxury-card-text text-xs">{isHe ? "צפייה בנתוני בסיס מאובטחים ואינטגרציות מערכת" : "Secure baseline data visibility and system integrations"}</p>
                   </div>
                 </div>
                 <span className="inline-flex items-center justify-center rounded-full bg-[#001830] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-[#FAF9F6] shadow-[0_10px_24px_rgba(0,24,48,0.12)] whitespace-nowrap">
-                  {isHe ? "פתח ←" : "Open →"}
+                  {isHe ? "גישה למודול ←" : "Access Module →"}
                 </span>
               </div>
             </button>

@@ -10,8 +10,6 @@ import {
 } from "lucide-react";
 import { generateText } from "@/lib/ai-service";
 
-const MONTHS_HE = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
-const MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const BusinessAnalyticsPage = () => {
   const { t, lang } = useI18n();
@@ -41,19 +39,13 @@ const BusinessAnalyticsPage = () => {
   const profitMargin = revenue > 0 ? Math.round((profit / revenue) * 100) : 0;
   const clients = Number(newClientsCount) || 0;
 
-  // Simulate monthly data for table
-  const currentMonth = new Date().getMonth();
-  const monthlyData = Array.from({ length: 6 }, (_, i) => {
-    const monthIdx = (currentMonth - 5 + i + 12) % 12;
-    const factor = 0.7 + (i * 0.08) + Math.random() * 0.15;
-    return {
-      month: isHe ? MONTHS_HE[monthIdx] : MONTHS_EN[monthIdx],
-      revenue: Math.round(revenue * factor),
-      expenses: Math.round(expenses * (0.85 + Math.random() * 0.2)),
-      clients: Math.round(clients * factor),
-      growth: i === 0 ? 0 : Math.round((factor - (0.7 + ((i - 1) * 0.08))) * 100),
-    };
-  });
+  const monthlyData: Array<{
+    month: string;
+    revenue: number;
+    expenses: number;
+    clients: number;
+    growth: number;
+  }> = [];
 
   const handleStartAnalysis = () => {
     if (revenue > 0) {
@@ -257,44 +249,50 @@ const BusinessAnalyticsPage = () => {
             {/* Monthly table */}
             {activeTab === "monthly" && (
               <div className="space-y-4 animate-fade-in-up">
-                <div className="glass-card rounded-xl p-4 overflow-x-auto">
-                  <div className="flex items-center gap-2 mb-4"><BarChart3 size={14} className="text-primary" /><span className="text-sm font-bold text-foreground">{isHe ? "טבלה חודשית" : "Monthly Table"}</span></div>
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-border/30">
-                        <th className="text-start py-2 px-2 text-xs font-bold text-muted-foreground">{isHe ? "חודש" : "Month"}</th>
-                        <th className="text-start py-2 px-2 text-xs font-bold text-muted-foreground">{isHe ? "הכנסות" : "Revenue"}</th>
-                        <th className="text-start py-2 px-2 text-xs font-bold text-muted-foreground">{isHe ? "הוצאות" : "Expenses"}</th>
-                        <th className="text-start py-2 px-2 text-xs font-bold text-muted-foreground">{isHe ? "לקוחות" : "Clients"}</th>
-                        <th className="text-start py-2 px-2 text-xs font-bold text-muted-foreground">{isHe ? "שינוי" : "Change"}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {monthlyData.map((row, i) => {
-                        const rowProfit = row.revenue - row.expenses;
-                        const isPositive = rowProfit > 0;
-                        return (
-                          <tr key={i} className={`border-b border-border/10 transition-colors ${i === monthlyData.length - 1 ? "bg-primary/5 font-bold" : "hover:bg-muted/30"}`}>
-                            <td className="py-2.5 px-2 text-foreground font-semibold">{row.month}</td>
-                            <td className="py-2.5 px-2">
-                              <span className={isPositive ? "text-green-600" : "text-destructive"}>{currency}{row.revenue.toLocaleString()}</span>
-                            </td>
-                            <td className="py-2.5 px-2 text-muted-foreground">{currency}{row.expenses.toLocaleString()}</td>
-                            <td className="py-2.5 px-2 text-foreground">{row.clients}</td>
-                            <td className="py-2.5 px-2">
-                              {row.growth !== 0 && (
-                                <span className={`inline-flex items-center gap-0.5 text-xs font-bold px-1.5 py-0.5 rounded-md ${row.growth > 0 ? "bg-green-500/10 text-green-600" : "bg-red-500/10 text-destructive"}`}>
-                                  {row.growth > 0 ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
-                                  {row.growth > 0 ? "+" : ""}{row.growth}%
-                                </span>
-                              )}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                {monthlyData.length > 0 ? (
+                  <div className="glass-card rounded-xl p-4 overflow-x-auto">
+                    <div className="flex items-center gap-2 mb-4"><BarChart3 size={14} className="text-primary" /><span className="text-sm font-bold text-foreground">{isHe ? "טבלה חודשית" : "Monthly Table"}</span></div>
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-border/30">
+                          <th className="text-start py-2 px-2 text-xs font-bold text-muted-foreground">{isHe ? "חודש" : "Month"}</th>
+                          <th className="text-start py-2 px-2 text-xs font-bold text-muted-foreground">{isHe ? "הכנסות" : "Revenue"}</th>
+                          <th className="text-start py-2 px-2 text-xs font-bold text-muted-foreground">{isHe ? "הוצאות" : "Expenses"}</th>
+                          <th className="text-start py-2 px-2 text-xs font-bold text-muted-foreground">{isHe ? "לקוחות" : "Clients"}</th>
+                          <th className="text-start py-2 px-2 text-xs font-bold text-muted-foreground">{isHe ? "שינוי" : "Change"}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {monthlyData.map((row, i) => {
+                          const rowProfit = row.revenue - row.expenses;
+                          const isPositive = rowProfit > 0;
+                          return (
+                            <tr key={i} className={`border-b border-border/10 transition-colors ${i === monthlyData.length - 1 ? "bg-primary/5 font-bold" : "hover:bg-muted/30"}`}>
+                              <td className="py-2.5 px-2 text-foreground font-semibold">{row.month}</td>
+                              <td className="py-2.5 px-2">
+                                <span className={isPositive ? "text-green-600" : "text-destructive"}>{currency}{row.revenue.toLocaleString()}</span>
+                              </td>
+                              <td className="py-2.5 px-2 text-muted-foreground">{currency}{row.expenses.toLocaleString()}</td>
+                              <td className="py-2.5 px-2 text-foreground">{row.clients}</td>
+                              <td className="py-2.5 px-2">
+                                {row.growth !== 0 && (
+                                  <span className={`inline-flex items-center gap-0.5 text-xs font-bold px-1.5 py-0.5 rounded-md ${row.growth > 0 ? "bg-green-500/10 text-green-600" : "bg-red-500/10 text-destructive"}`}>
+                                    {row.growth > 0 ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
+                                    {row.growth > 0 ? "+" : ""}{row.growth}%
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="glass-card rounded-xl p-6 text-center" style={{ backgroundColor: "#001830", color: "#F5F5DC" }}>
+                    No data to display yet.
+                  </div>
+                )}
               </div>
             )}
 

@@ -95,10 +95,10 @@ const AccountSettingsPage = () => {
           </button>
           <div>
             <h1 className="text-5xl font-black tracking-tight text-[#001830] mb-2">
-              {isHe ? "אזור אישי" : "Personal Area"}
+              {isHe ? "מרכז בקרה ופרופיל ניהולי" : "Executive Control Center & Administrative Profile"}
             </h1>
             <p className="text-sm font-light leading-6 text-[#001830]/70">
-              {isHe ? "ניהול פרטי החשבון והגדרות העסק שלך" : "Manage your account details and business settings"}
+              {isHe ? "פיקוח על מאפייני המערכת, תנאי התקשרות והגדרות ארגוניות" : "Oversight of system attributes, service terms and organizational settings"}
             </p>
           </div>
           <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">

@@ -104,7 +104,7 @@ const CreatePage = () => {
                 </div>
 
                 <div className="rounded-full bg-[#001830] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-[#FAF9F6] shadow-[0_10px_24px_rgba(0,24,48,0.12)]">
-                  {isHe ? "פתח ←" : "Open →"}
+                  {isHe ? "גישה למודול ←" : "Access Module →"}
                 </div>
               </div>
             </button>
