@@ -131,13 +131,13 @@
 
 html {
   scroll-behavior: smooth;
-  font-family: 'Rubik', sans-serif;
-  background-color: #FAF9F6;
+  font-family: 'Rubik', sans-serif !important;
+  background-color: #FAF9F6 !important;
 }
 
 body {
-  font-family: 'Rubik', sans-serif;
-  background-color: #FAF9F6;
+  font-family: 'Rubik', sans-serif !important;
+  background-color: #FAF9F6 !important;
   color: #000F21;
   line-height: 1.55;
   letter-spacing: 0.01em;
@@ -146,29 +146,28 @@ body {
   min-height: 100%;
 }
 
-html, body, #root {
+html, body, #root, .min-h-screen, main, [data-route], [class*="Page"] {
   background-color: #FAF9F6 !important;
 }
 
 *, *::before, *::after {
-  font-family: 'Rubik', sans-serif !important;
-  text-align: right !important;
   box-sizing: border-box;
 }
 
-.text-center, .text-left {
-  text-align: right !important;
+button, input, textarea, select {
+  font-family: 'Rubik', sans-serif !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
   color: var(--soft-navy);
-  font-family: var(--font-assistant);
+  font-family: 'Rubik', sans-serif !important;
   line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
 p, li, span, label, input, button, textarea, select {
   color: var(--soft-navy);
+  font-family: 'Rubik', sans-serif !important;
 }
 
 a {
@@ -227,6 +226,7 @@ button, input, textarea, select {
   font-weight: 800;
   letter-spacing: 0.28em;
   text-transform: uppercase;
+  text-align: right !important;
 }
 
 .luxury-page-title {
@@ -235,6 +235,7 @@ button, input, textarea, select {
   line-height: 1.15 !important;
   letter-spacing: -0.02em !important;
   color: #000F21 !important;
+  text-align: right !important;
 }
 
 .luxury-page-copy {
@@ -243,6 +244,7 @@ button, input, textarea, select {
   font-weight: 500 !important;
   line-height: 1.55 !important;
   max-width: 42rem;
+  text-align: right !important;
 }
 
 .luxury-card-title {
@@ -284,15 +286,55 @@ button, input, textarea, select {
 .glass-card,
 .soft-business-card,
 .luxury-card {
-  background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
-  box-shadow: 0 4px 12px rgba(0, 24, 48, 0.04) !important;
-  border-radius: 16px !important;
+  background: #FAF9F6 !important;
+  border: 1px solid rgba(0, 15, 33, 0.04) !important;
+  box-shadow: 0 4px 20px rgba(0, 15, 33, 0.02) !important;
+  border-radius: 12px !important;
   padding: 24px !important;
 }
 
 .glass-card:hover {
   box-shadow: 0 28px 70px rgba(0,24,48,0.08);
+}
+
+/* Strong internal tool button enforcement */
+button.gradient-glow,
+button[class*="gradient-glow"],
+button[class*="primary-btn"] {
+  background: #001830 !important;
+  background-color: #001830 !important;
+  color: #FAF9F6 !important;
+  border: 1px solid #001830 !important;
+  box-shadow: 0 10px 24px rgba(0, 24, 48, 0.12) !important;
+}
+
+button.gradient-glow svg,
+button[class*="gradient-glow"] svg,
+button[class*="primary-btn"] svg {
+  color: #FAF9F6 !important;
+  fill: #FAF9F6 !important;
+  stroke: #FAF9F6 !important;
+}
+
+button.glass-card,
+button[class*="glass-card"],
+button.bg-muted,
+button[class*="bg-muted"],
+button[class*="bg-transparent"],
+button[class*="bg-white"],
+button[class*="bg-background"] {
+  background-color: #FAF9F6 !important;
+  color: #001830 !important;
+  border: 1px solid #001830 !important;
+  box-shadow: 0 4px 16px rgba(0, 24, 48, 0.06) !important;
+}
+
+button.glass-card:hover,
+button[class*="glass-card"]:hover,
+button.bg-muted:hover,
+button[class*="bg-muted"]:hover {
+  background-color: #F5F5DC !important;
+  color: #001830 !important;
 }
 
 /* Global active/selected state override for clickable UI elements */

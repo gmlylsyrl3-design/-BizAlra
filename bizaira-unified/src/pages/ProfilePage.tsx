@@ -103,8 +103,8 @@ const ProfilePage = () => {
                     <p className="luxury-card-text text-xs">{isHe ? "עזרה מהירה ומענה מקצועי" : "Quick help and expert guidance"}</p>
                   </div>
                 </div>
-                <span className="rounded-full bg-[#001830]/5 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-[#001830]/70">
-                  {isHe ? "פתח" : "Open"}
+                <span className="inline-flex items-center justify-center rounded-full bg-[#001830] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-[#FAF9F6] shadow-[0_10px_24px_rgba(0,24,48,0.12)] whitespace-nowrap">
+                  {isHe ? "פתח ←" : "Open →"}
                 </span>
               </div>
             </button>
@@ -124,15 +124,15 @@ const ProfilePage = () => {
                     <p className="luxury-card-text text-xs">{isHe ? "סקירת תכנית והתאמות" : "Review your plan and upgrade options"}</p>
                   </div>
                 </div>
-                <span className="rounded-full bg-[#001830]/5 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-[#001830]/70">
-                  {isHe ? "פתח" : "Open"}
+                <span className="inline-flex items-center justify-center rounded-full bg-[#001830] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-[#FAF9F6] shadow-[0_10px_24px_rgba(0,24,48,0.12)] whitespace-nowrap">
+                  {isHe ? "פתח ←" : "Open →"}
                 </span>
               </div>
             </button>
 
             <button
               type="button"
-              onClick={() => navigate("/settings")}
+              onClick={() => navigate("/profile/administrative")}
               className="luxury-card group w-full text-right transition duration-300 hover:-translate-y-0.5 hover:shadow-soft-business"
             >
               <div className="luxury-card-row items-center">
@@ -145,8 +145,8 @@ const ProfilePage = () => {
                     <p className="luxury-card-text text-xs">{isHe ? "התאמות פרטיות ונגישות" : "Privacy and accessibility preferences"}</p>
                   </div>
                 </div>
-                <span className="rounded-full bg-[#001830]/5 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-[#001830]/70">
-                  {isHe ? "פתח" : "Open"}
+                <span className="inline-flex items-center justify-center rounded-full bg-[#001830] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-[#FAF9F6] shadow-[0_10px_24px_rgba(0,24,48,0.12)] whitespace-nowrap">
+                  {isHe ? "פתח ←" : "Open →"}
                 </span>
               </div>
             </button>

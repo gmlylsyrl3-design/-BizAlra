@@ -30,6 +30,7 @@ import PricingPage from "./pages/PricingPage";
 import SupportPage from "./pages/SupportPage";
 import VideoStudioPage from "./pages/VideoStudioPage";
 import AccountSettingsPage from "./pages/AccountSettingsPage";
+import AdministrativeProfilePage from "./pages/AdministrativeProfilePage";
 import NotFound from "./pages/NotFound";
 import AccessibilityStatement from "./pages/AccessibilityStatement";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -150,6 +151,7 @@ const App = () => {
                   <Route path="/create/video" element={<AppLayout><VideoStudioPage /></AppLayout>} />
                   <Route path="/dashboard" element={<AppLayout><DashboardPage /></AppLayout>} />
                   <Route path="/profile" element={<AppLayout><ProfilePage /></AppLayout>} />
+                  <Route path="/profile/administrative" element={<AppLayout><AdministrativeProfilePage /></AppLayout>} />
                   <Route path="/settings" element={<AppLayout><AccountSettingsPage /></AppLayout>} />
                   <Route path="/pricing" element={<AppLayout><PricingPage /></AppLayout>} />
                   <Route path="/support" element={<AppLayout><SupportPage /></AppLayout>} />

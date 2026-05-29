@@ -58,14 +58,15 @@ const PricingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-[#000B18]" dir={lang === "he" ? "rtl" : "ltr"}>
+    <div className="min-h-screen bg-[#FAF9F6] text-[#001830]" dir={lang === "he" ? "rtl" : "ltr"}>
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="mb-12 max-w-3xl text-right">
-          <h1 className="text-5xl font-black tracking-tight text-[#001830] sm:text-6xl font-serif" style={{ fontFamily: "Georgia, 'Times New Roman', serif", lineHeight: 1.05 }}>
-            {isHe ? "אזור אישי" : "Personal Area"}
+          <p className="luxury-page-eyebrow mb-3">{isHe ? "תמחור" : "Pricing"}</p>
+          <h1 className="luxury-page-title text-4xl sm:text-5xl">
+            {isHe ? "תוכניות וניהול מנוי" : "Plans & subscription management"}
           </h1>
-          <p className="mt-2 text-sm font-light leading-6 text-[#475569]/80 sm:text-base font-serif" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>
-            {isHe ? "ניהול פרטי החשבון והגדרות העסק שלך" : "Manage your account details and business settings"}
+          <p className="luxury-page-copy mt-3 max-w-2xl">
+            {isHe ? "בחרו את התוכנית המתאימה לכם וראו את הכלים שמציע BizAIra בדיוק כמו בשאר הממשק." : "Choose the plan that fits your workflow and view the tools BizAIra offers in the same premium tone as the rest of the app."}
           </p>
         </div>
 
@@ -76,7 +77,7 @@ const PricingPage = () => {
             return (
               <div
                 key={plan.name}
-                className={`group relative flex min-h-[30rem] flex-col justify-between rounded-[28px] border border-[#E5E7EB] bg-white p-8 text-[#000B18] shadow-[0_4px_12px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-[#000B18] hover:text-white ${isPro ? "ring-1 ring-[#000B18]/10" : ""}`}
+                className={`group relative flex min-h-[30rem] flex-col justify-between rounded-[12px] border border-[rgba(0,15,33,0.04)] bg-[#FAF9F6] p-8 text-[#001830] shadow-[0_4px_20px_rgba(0,15,33,0.02)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-soft-business ${isPro ? "ring-1 ring-[#001830]/10" : ""}`}
                 style={{ animationDelay: `${i * 120}ms` }}
               >
                 {isPro && (
@@ -86,26 +87,26 @@ const PricingPage = () => {
                 )}
 
                 <div className="space-y-8 pt-6 text-center">
-                  <div className="space-y-4 px-2">
-                    <p className="text-sm font-semibold uppercase tracking-[0.35em] text-[#64748B]">
+                  <div className="space-y-4 px-2 text-right">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#001830]/60">
                       {lang === "he" ? "תוכנית" : "Plan"}
                     </p>
-                    <h2 className="text-3xl font-semibold tracking-tight transition-colors duration-300 group-hover:text-white">
+                    <h2 className="text-3xl font-semibold tracking-tight text-[#001830]">
                       {plan.name}
                     </h2>
                     <div className="space-y-1">
-                      <p className="text-5xl font-extrabold tracking-tight transition-colors duration-300 group-hover:text-white">
+                      <p className="text-5xl font-extrabold tracking-tight text-[#001830]">
                         {plan.price}
                       </p>
                       {plan.period && (
-                        <p className="text-sm text-[#64748B] transition-colors duration-300 group-hover:text-white/80">
+                        <p className="text-sm text-[#64748B]">
                           {plan.period}
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <ul className="space-y-4 text-left transition-colors duration-300 group-hover:text-white/90">
+                  <ul className="space-y-4 text-right text-[#001830]">
                     {featureList.map((feature) => (
                       <li key={feature} className="flex items-start gap-3 text-base leading-7">
                         <span className="mt-1 inline-flex h-2 w-2 rounded-full bg-current shrink-0" />
@@ -115,7 +116,7 @@ const PricingPage = () => {
                   </ul>
                 </div>
 
-                <button className="mt-8 inline-flex w-full items-center justify-center rounded-full border border-current bg-transparent px-5 py-4 text-sm font-semibold uppercase tracking-[0.04em] transition-colors duration-300 hover:bg-white/10 group-hover:bg-white/10 group-hover:text-white">
+                <button className="mt-8 inline-flex w-full items-center justify-center rounded-full bg-[#001830] px-5 py-4 text-sm font-semibold uppercase tracking-[0.04em] text-[#FAF9F6] shadow-[0_10px_24px_rgba(0,24,48,0.12)] transition hover:bg-[#0D2E48]">
                   {plan.priceLabel}
                 </button>
               </div>
