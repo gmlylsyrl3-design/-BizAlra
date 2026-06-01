@@ -1,0 +1,389 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand: #000B18;
+  --brand-foreground: #FFFFFF;
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --font-sans: 'Rubik', 'Inter', 'Montserrat', sans-serif;
+  --font-serif: 'Rubik', 'Inter', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+  --font-playfair: 'Rubik', sans-serif;
+  --font-assistant: 'Rubik', 'Inter', sans-serif;
+  --font-heebo: 'Heebo', sans-serif;
+  --font-montserrat: 'Montserrat', sans-serif;
+
+  --soft-cream: #FFF9F5;
+  --surface-cream: #FFFDF9;
+  --soft-navy: #001830;
+  --soft-grey: #607089;
+  --soft-border: rgba(0,24,48,0.12);
+  --soft-shadow: 0 28px 70px rgba(0,24,48,0.08);
+  --accent-rose: #8B6A73;
+  --accent-rose-soft: rgba(139,106,115,0.14);
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --background:    0 0% 100%;
+  --foreground:    224 10% 10%;
+  --card:             0 0% 100%;
+  --card-foreground:  224 10% 10%;
+  --popover:          0 0% 100%;
+  --popover-foreground: 224 10% 10%;
+  --primary:            224 90% 5%;
+  --primary-foreground: 0 0% 100%;
+  --secondary:             210 10% 98%;
+  --secondary-foreground:  224 90% 11%;
+  --muted:                 210 10% 98%;
+  --muted-foreground:      224 55% 18%;
+  --accent:            224 90% 5%;
+  --accent-foreground: 0 0% 100%;
+  --destructive:            0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 38 12% 85%;
+  --input:  38 12% 88%;
+  --ring:   224 90% 5%;
+  --deep-navy: 216 95% 7%;
+  --radius: 12px;
+  --luxury-navy: 222 47% 8%;
+  --luxury-gold: 45 86% 50%;
+  --luxury-cream: 45 20% 95%;
+  --luxury-black: 222 47% 8%;
+  --luxury-white: 0 0% 100%;
+  --luxury-gray-50: 220 25% 98%;
+  --luxury-gray-100: 220 20% 96%;
+  --luxury-gray-200: 220 18% 94%;
+  --luxury-gray-300: 220 16% 92%;
+  --luxury-gray-400: 220 12% 70%;
+  --luxury-gray-500: 220 12% 50%;
+  --luxury-gray-600: 220 12% 35%;
+  --luxury-gray-700: 220 12% 25%;
+  --luxury-gray-800: 220 12% 15%;
+  --luxury-gray-900: 222 47% 8%;
+  --gradient-from: 216 68% 15%;
+  --gradient-to:   216 68% 10%;
+  --gradient-gold: linear-gradient(135deg, hsl(207 65% 12%), hsl(207 65% 8%));
+  --gradient-luxury: linear-gradient(135deg, hsl(216 68% 12%), hsl(270 30% 65%));
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --gold:          45 86% 50%;
+  --glow-start:    222 47% 8%;
+  --glow-mid:      222 47% 6%;
+  --glow-end:      222 47% 10%;
+  --gold-sparkle:  45 86% 50%;
+  --surface-glass: 0 0% 100%;
+  --font-size-multiplier: 1;
+  --line-height-multiplier: 1;
+  --letter-spacing-multiplier: 1;
+  --contrast-mode: normal;
+  --color-mode: normal;
+  --animation-mode: enabled;
+}
+
+.luxury-glass {
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(24px);
+  box-shadow: var(--glass-shadow);
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: 'Rubik', sans-serif !important;
+  background-color: #FAF9F6 !important;
+}
+
+body {
+  font-family: 'Rubik', sans-serif !important;
+  background-color: #FAF9F6 !important;
+  color: #000F21;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100%;
+}
+
+html, body, #root, .min-h-screen, main, [data-route], [class*="Page"] {
+  background-color: #FAF9F6 !important;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+button, input, textarea, select {
+  font-family: 'Rubik', sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--soft-navy);
+  font-family: 'Rubik', sans-serif !important;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+p, li, span, label, input, button, textarea, select {
+  color: var(--soft-navy);
+  font-family: 'Rubik', sans-serif !important;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, textarea, select {
+  font: inherit;
+}
+
+.bg-white {
+  background-color: var(--surface-cream) !important;
+}
+
+.text-soft-muted {
+  color: var(--soft-grey) !important;
+}
+
+.bg-soft-cream {
+  background-color: var(--surface-cream) !important;
+}
+
+.bg-surface-cream {
+  background-color: var(--surface-cream) !important;
+}
+
+.soft-business-card,
+.luxury-card {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  min-height: auto !important;
+  width: 100% !important;
+}
+
+.luxury-card {
+  display: block;
+}
+
+.luxury-card-row,
+.luxury-card > div {
+  border-bottom: 1px solid #F1F5F9 !important;
+  padding: 16px 0 !important;
+}
+
+.shadow-soft-business {
+  box-shadow: 0 26px 60px rgba(0,24,48,0.1);
+}
+
+.luxury-page-eyebrow {
+  color: rgba(0,24,48,0.6);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  text-align: right !important;
+}
+
+.luxury-page-title {
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+  color: #000F21 !important;
+  text-align: right !important;
+}
+
+.luxury-page-copy {
+  color: #64748B !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.55 !important;
+  max-width: 42rem;
+  text-align: right !important;
+}
+
+.luxury-card-title {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #000F21 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.02em !important;
+  text-align: right !important;
+}
+
+.luxury-card-text {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #64748B !important;
+  line-height: 1.5 !important;
+  text-align: right !important;
+}
+
+.luxury-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 96px;
+  width: 100%;
+}
+
+.luxury-card-inner {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.luxury-card .luxury-card-inner,
+.luxury-card .luxury-card-row {
+  text-align: right;
+}
+
+.glass-card,
+.soft-business-card,
+.luxury-card {
+  background: #FAF9F6 !important;
+  border: 1px solid rgba(0, 15, 33, 0.04) !important;
+  box-shadow: 0 4px 20px rgba(0, 15, 33, 0.02) !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+}
+
+.glass-card:hover {
+  box-shadow: 0 28px 70px rgba(0,24,48,0.08);
+}
+
+/* Strong internal tool button enforcement */
+button.gradient-glow,
+button[class*="gradient-glow"],
+button[class*="primary-btn"] {
+  background: #001830 !important;
+  background-color: #001830 !important;
+  color: #FAF9F6 !important;
+  border: 1px solid #001830 !important;
+  box-shadow: 0 10px 24px rgba(0, 24, 48, 0.12) !important;
+}
+
+button.gradient-glow svg,
+button[class*="gradient-glow"] svg,
+button[class*="primary-btn"] svg {
+  color: #FAF9F6 !important;
+  fill: #FAF9F6 !important;
+  stroke: #FAF9F6 !important;
+}
+
+button.glass-card,
+button[class*="glass-card"],
+button.bg-muted,
+button[class*="bg-muted"],
+button[class*="bg-transparent"],
+button[class*="bg-white"],
+button[class*="bg-background"] {
+  background-color: #FAF9F6 !important;
+  color: #001830 !important;
+  border: 1px solid #001830 !important;
+  box-shadow: 0 4px 16px rgba(0, 24, 48, 0.06) !important;
+}
+
+button.glass-card:hover,
+button[class*="glass-card"]:hover,
+button.bg-muted:hover,
+button[class*="bg-muted"]:hover {
+  background-color: #F5F5DC !important;
+  color: #001830 !important;
+}
+
+/* Global active/selected state override for clickable UI elements */
+button[data-active="true"],
+button[aria-selected="true"],
+button[aria-pressed="true"],
+button[data-state="active"],
+[role="tab"][aria-selected="true"],
+[role="button"][aria-pressed="true"],
+[data-active],
+[data-active="true"],
+[data-state="active"],
+[data-state="open"],
+[data-state="on"],
+[data-selected="true"],
+[aria-selected="true"],
+[aria-pressed="true"] {
+  background-color: #001830 !important;
+  color: #F5F5DC !important;
+  border-color: #001830 !important;
+  box-shadow: 0 16px 40px rgba(0, 24, 48, 0.16) !important;
+}
+
+button[data-active="true"] svg,
+button[aria-selected="true"] svg,
+button[aria-pressed="true"] svg,
+button[data-state="active"] svg,
+[role="tab"][aria-selected="true"] svg,
+[role="button"][aria-pressed="true"] svg,
+[data-active="true"] svg,
+[data-state="active"] svg,
+[data-selected="true"] svg,
+[aria-selected="true"] svg,
+[aria-pressed="true"] svg {
+  color: #F5F5DC !important;
+  fill: #F5F5DC !important;
+  stroke: #F5F5DC !important;
+}
+
+/* Explicit helper class for solid selected card/button state */
+.selected-solid {
+  background: #001830 !important;
+  color: #F5F5DC !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.selected-solid svg {
+  color: #F5F5DC !important;
+  fill: #F5F5DC !important;
+  stroke: #F5F5DC !important;
+}
